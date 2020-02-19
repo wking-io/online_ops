@@ -30,11 +30,9 @@ config :phoenix, :json_library, Jason
 import_config "#{Mix.env()}.exs"
 
 # Ueberauth config for initial OAuth requests
-config :ueberauth, Ueberauth,
-  providers: [
-    google: {Ueberauth.Strategy.Google, [default_scope: "email profile openid https://www.googleapis.com/auth/analytics.readonly"]}
-  ]
+config :oauth2, debug: true
 
-config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+config :online_ops, Google,
   client_id: System.get_env("GOOGLE_CLIENT_ID"),
-  client_secret: System.get_env("GOOGLE_CLIENT_SECRET")
+  client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
+  redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")

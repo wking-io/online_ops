@@ -1,28 +1,13 @@
 defmodule OnlineOpsWeb.Router do
   use OnlineOpsWeb, :router
 
-  defmodule OnlineOpsWeb.AuthPlug do
-    use Plug
-
-    def call(conn, opts \\ []) do
-      user_id = get_session(conn, :user_id)
-      if is_nil(user_id) do
-        redirect(conn, to: "/login")
-      else
-        user = Accounts.get_user(user_id)
-        conn
-        |> assign(:user_id, user_id)
-        |> assign(:user, user)
-      end
-    end
-  end
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :assign_current_user
   end
 
   pipeline :api do
@@ -42,12 +27,20 @@ defmodule OnlineOpsWeb.Router do
   scope "/auth", OnlineOpsWeb do
     pipe_through :browser
 
-    get "/:provider", AuthController, :request
+    get "/:provider", AuthController, :index
     get "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", OnlineOpsWeb do
-  #   pipe_through :api
-  # end
+  # Fetch the current user from the session and add it to `conn.assigns`. This
+  # will allow you to have access to the current user in your views with
+  # `@current_user`.
+  defp assign_current_user(conn, _) do
+    current_user = get_session(conn, :current_user)
+    if (is_nil(current_user)) do
+      redirect(to: "/")
+    else
+      assign(conn, :current_user, current_user)
+    end
+  end
 end

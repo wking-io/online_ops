@@ -20,7 +20,7 @@ defmodule OnlineOps.MixProject do
   def application do
     [
       mod: {OnlineOps.Application, []},
-      extra_applications: [:logger, :runtime_tools, :ueberauth, :ueberauth_google]
+      extra_applications: [:logger, :runtime_tools, :oauth2]
     ]
   end
 
@@ -43,8 +43,7 @@ defmodule OnlineOps.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:ueberauth, "~> 0.6"},
-      {:ueberauth_google, "~> 0.8"}
+      {:oauth2, "~> 2.0"}
     ]
   end
 
