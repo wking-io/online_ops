@@ -1,4 +1,4 @@
-defmodule Google do
+defmodule Auth.Google do
   @moduledoc """
   OAuth2 strategy for Google.
   """
@@ -16,7 +16,7 @@ defmodule Google do
   end
 
   def client do
-    Application.get_env(:online_ops, Google),
+    Application.get_env(:online_ops, Google)
     |> Keyword.merge(config())
     |> OAuth2.Client.new()
   end

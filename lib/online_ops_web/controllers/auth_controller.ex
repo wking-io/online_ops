@@ -24,8 +24,7 @@ defmodule OnlineOpsWeb.AuthController do
   end
 
   @doc """
-  This action is reached via `/auth/:provider/callback` is the the callback URL that
-  the OAuth2 provider will redirect the user back to with a `code` that will
+  This action is reached via `/auth/:provider/callback` is the the callback URL that the OAuth2 provider will redirect the user back to with a `code` that will
   be used to request an access token. The access token will then be used to
   access protected resources on behalf of the user.
   """
@@ -49,9 +48,9 @@ defmodule OnlineOpsWeb.AuthController do
     |> redirect(to: "/dashboard")
   end
 
-  defp authorize_url!("google"),   do: Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
+  defp authorize_url!("google"),   do: Auth.Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
 
-  defp get_token!("google", code),   do: Google.get_token!(code: code)
+  defp get_token!("google", code),   do: Auth.Google.get_token!(code: code)
 
   defp get_user!("google", client) do
     %{body: user} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")

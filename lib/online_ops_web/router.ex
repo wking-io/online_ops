@@ -1,5 +1,7 @@
 defmodule OnlineOpsWeb.Router do
   use OnlineOpsWeb, :router
+  
+  alias OnlineOps.Plugs
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -7,7 +9,7 @@ defmodule OnlineOpsWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :assign_current_user
+    plug Plugs.Auth
   end
 
   pipeline :api do
@@ -30,17 +32,5 @@ defmodule OnlineOpsWeb.Router do
     get "/:provider", AuthController, :index
     get "/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete
-  end
-
-  # Fetch the current user from the session and add it to `conn.assigns`. This
-  # will allow you to have access to the current user in your views with
-  # `@current_user`.
-  defp assign_current_user(conn, _) do
-    current_user = get_session(conn, :current_user)
-    if (is_nil(current_user)) do
-      redirect(to: "/")
-    else
-      assign(conn, :current_user, current_user)
-    end
   end
 end
