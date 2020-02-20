@@ -5,11 +5,13 @@ defmodule OnlineOpsWeb.AuthController do
 
   use OnlineOpsWeb, :controller
 
+  import Logger
+
   @doc """
   This action is reached via `/auth/:provider` and redirects to the OAuth2 provider
   based on the chosen strategy.
   """
-  def index(conn, %{"provider" => provider}) do
+  def request(conn, %{"provider" => provider}) do
     redirect(conn, external: authorize_url!(provider))
   end
 
@@ -31,7 +33,6 @@ defmodule OnlineOpsWeb.AuthController do
   def callback(conn, %{"provider" => provider, "code" => code}) do
     # Exchange an auth code for an access token
     client = get_token!(provider, code)
-
     # Request the user's data with the access token
     user = get_user!(provider, client)
 
@@ -48,12 +49,18 @@ defmodule OnlineOpsWeb.AuthController do
     |> redirect(to: "/dashboard")
   end
 
-  defp authorize_url!("google"),   do: Auth.Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
+  defp authorize_url!("google"), do: Google.authorize_url!(scope: "email profile openid https://www.googleapis.com/auth/analytics.readonly", access_type: "offline")
 
-  defp get_token!("google", code),   do: Auth.Google.get_token!(code: code)
+  defp get_token!("google", code), do: Google.get_token!(code: code)
 
   defp get_user!("google", client) do
-    %{body: user} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
-    %{name: user["name"], avatar: user["picture"]}
+    case OAuth2.Client.get(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect") do
+      {:ok, %OAuth2.Response{body: user}} ->
+        %{name: user["name"], avatar: user["picture"]}
+      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
+        Logger.error("Unauthorized token")
+      {:error, %OAuth2.Error{reason: reason}} ->
+        Logger.error("Error: #{inspect reason}")
+    end
   end
 end
