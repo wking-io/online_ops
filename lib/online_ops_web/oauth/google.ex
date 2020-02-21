@@ -20,6 +20,7 @@ defmodule Google do
     Application.get_env(:online_ops, Google)
     |> Keyword.merge(config())
     |> OAuth2.Client.new()
+    |> OAuth2.Client.put_serializer("application/json", Jason)
   end
 
   def authorize_url!(params \\ []) do

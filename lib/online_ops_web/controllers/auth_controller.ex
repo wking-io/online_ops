@@ -34,7 +34,8 @@ defmodule OnlineOpsWeb.AuthController do
     # Exchange an auth code for an access token
     client = get_token!(provider, code)
     # Request the user's data with the access token
-    user = get_user!(provider, client)
+    user = get_auth_user(provider, client)
+    |> transform_auth_user
 
     # Store the user in the session under `:current_user` and redirect to /.
     # In most cases, we'd probably just store the user's ID that can be used
@@ -53,14 +54,35 @@ defmodule OnlineOpsWeb.AuthController do
 
   defp get_token!("google", code), do: Google.get_token!(code: code)
 
-  defp get_user!("google", client) do
-    case OAuth2.Client.get(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect") do
+  defp get_auth_user("google", client) do
+    case OAuth2.Client.get(client, "https://people.googleapis.com/v1/people/me?personFields=emailAddresses,names,photos") do
       {:ok, %OAuth2.Response{body: user}} ->
-        %{name: user["name"], avatar: user["picture"]}
+        user
       {:error, %OAuth2.Response{status_code: 401, body: body}} ->
-        Logger.error("Unauthorized token")
+        Logger.error("Unauthorized token: #{inspect body}")
       {:error, %OAuth2.Error{reason: reason}} ->
         Logger.error("Error: #{inspect reason}")
     end
+  end
+
+  defp transform_auth_user(auth_user) do
+    Enum.reduce(auth_user, %{}, transform_auth_user_field)
+  end
+
+  defp transform_auth_user_field({"emailAddresses", data}, acc) do
+    case Enum.reduce_while(data, {:empty}, find_primary_email) do
+      {:found, email} ->
+        Map.put(acc, :email, email)
+      {:empty} ->
+        acc
+    end
+  end
+
+  defp find_primary_email(%{ metadata: %{ primary: true }, value: email }, _acc) do
+    {:found, email}
+  end
+
+  defp find_primary_email(_, acc) do
+    acc
   end
 end
