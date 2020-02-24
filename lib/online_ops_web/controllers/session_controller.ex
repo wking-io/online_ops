@@ -4,10 +4,8 @@ defmodule OnlineOpsWeb.SessionController do
   alias OnlineOps.Users
   alias OnlineOps.Schema.User
   alias OnlineOpsWeb.Guardian
-  import Logger
 
   def new(conn, _params) do
-    Logger.info(inspect(Users.get_all))
     case conn.assigns[:current_user] do
       %User{} ->
         conn
@@ -36,7 +34,7 @@ defmodule OnlineOpsWeb.SessionController do
 
   def callback(conn, %{"magic_token" => magic_token}) do
     case Guardian.decode_magic(magic_token) do
-      {:ok, {:ok, user}, _claims} ->
+      {:ok, user, _claims} ->
         validate_magic(conn, user)
 
       _ ->
@@ -53,7 +51,6 @@ defmodule OnlineOpsWeb.SessionController do
   defp validate_magic(conn, user) do
     case Users.validate_magic(user.id) do
       {:ok, _} ->
-        Logger.info("here")
         conn
         |> Guardian.Plug.sign_in(user)
         |> redirect(to: Routes.app_path(conn, :index))

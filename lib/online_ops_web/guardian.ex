@@ -3,8 +3,6 @@ defmodule OnlineOpsWeb.Guardian do
   
   alias OnlineOps.Users
 
-  import Logger
-
   @doc """
   No password authentication helpers
   """

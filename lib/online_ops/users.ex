@@ -9,13 +9,10 @@ defmodule OnlineOps.Users do
   alias OnlineOps.Schema.User
   alias OnlineOps.Schema.UserToken
 
-  import Logger
-
   @doc """
   Fetches a user by id.
   """
   def get_by_id(id) do
-    Logger.info("Inside: #{inspect id}")
     case Repo.get(User, id) do
       %User{} = user ->
         {:ok, user}

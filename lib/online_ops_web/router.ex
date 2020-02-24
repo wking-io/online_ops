@@ -6,7 +6,7 @@ defmodule OnlineOpsWeb.Router do
       module: OnlineOpsWeb.Guardian,
       error_handler: OnlineOpsWeb.SessionController
     plug Guardian.Plug.VerifySession
-    plug Guardian.Plug.LoadResource, allow_blank: true, key: :current_user
+    plug Guardian.Plug.LoadResource, allow_blank: true
   end
 
   pipeline :anonymous_browser do
