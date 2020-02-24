@@ -9,32 +9,32 @@ defmodule OnlineOpsWeb.Guardian do
 
   @magic "magic"
   @access "access"
-
-  def encode_magic(guardian, resource, claims \\ %{}) do
-    guardian.encode_and_sign(resource, claims, token_type: @magic)
+  
+  def encode_magic(resource, claims \\ %{}) do
+    encode_and_sign(resource, claims, token_type: @magic)
   end
-
-  def decode_magic(guardian, magic_token, claims \\ %{}) do
-    guardian.resource_from_token(magic_token, claims, token_type: @magic)
+  
+  def decode_magic(magic_token, claims \\ %{}) do
+    resource_from_token(magic_token, claims, token_type: @magic)
   end
-
-  def encode_access(guardian, resource, claims \\ %{}) do
-    guardian.encode_and_sign(resource, claims, token_type: @access)
+  
+  def encode_access(resource, claims \\ %{}) do
+    encode_and_sign(resource, claims, token_type: @access)
   end
-
-  def decode_access(guardian, access_token, claims \\ %{}) do
-    guardian.resource_from_token(access_token, claims, token_type: @access)
+  
+  def decode_access(access_token, claims \\ %{}) do
+    resource_from_token(access_token, claims, token_type: @access)
   end
-
-  def exchange_magic(guardian, magic_token) do
-    with {:ok, _, {token, claims}} <- guardian.exchange(magic_token, @magic, @access) do
+  
+  def exchange_magic(magic_token) do
+    with {:ok, _, {token, claims}} <- exchange(magic_token, @magic, @access) do
       {:ok, token, claims}
     end
   end
-
-  def send_magic_link(guardian, resource, claims \\ %{}, params \\ %{}) do
-    with {:ok, magic_token, claims} <- guardian.encode_magic(resource, claims) do
-      guardian.deliver_magic_link(resource, magic_token, params)
+  
+  def send_magic_link(resource, claims \\ %{}, params \\ %{}) do
+    with {:ok, magic_token, claims} <- encode_magic(resource, claims) do
+      deliver_magic_link(resource, magic_token, params)
       {:ok, magic_token, claims}
     end
   end
@@ -57,16 +57,18 @@ defmodule OnlineOpsWeb.Guardian do
     end
   end
 
-  def deliver_magic_link(_user, magic_token, _opts) do
+  def deliver_magic_link(user, magic_token, _opts) do
     require Logger
     alias OnlineOpsWeb.Endpoint
     import OnlineOpsWeb.Router.Helpers
+
+    Users.create_magic(%{user_id: user.id})
 
     Logger.info """
 
     This is the magic link:
 
-      #{auth_url(Endpoint, :callback, magic_token)}
+      #{session_url(Endpoint, :callback, magic_token)}
 
     """
   end

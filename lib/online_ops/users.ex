@@ -39,12 +39,26 @@ defmodule OnlineOps.Users do
   end
 
   def create_user(attrs \\ %{}) do
-    create_changeset(attrs)
+    create_user_changeset(attrs)
     |> Repo.insert()
   end
 
-  def create_changeset(attrs \\ %{}) do
+  def create_user_changeset(attrs \\ %{}) do
     User.changeset(%User{}, attrs)
+  end
+
+  def create_user_token(attrs \\ %{}) do
+    create_user_token_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_user_token_changeset(attrs \\ %{}) do
+    UserToken.changeset(%UserToken{}, attrs)
+  end
+
+  def create_magic(attrs \\ %{}) do
+    create_user_token_changeset(attrs)
+    |> Repo.insert()
   end
 
   def validate_magic(id) do
@@ -59,7 +73,8 @@ defmodule OnlineOps.Users do
   end
 
   defp delete_magic(id) do
-    case Repo.delete(UserToken, id) do
+    user_token = create_user_changeset(%{user_id: id})
+    case Repo.delete(user_token) do
       {:ok, _} ->
         {:ok, :token_deleted}
       

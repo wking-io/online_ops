@@ -1,8 +1,11 @@
 defmodule OnlineOpsWeb.AppController do
   use OnlineOpsWeb, :controller
 
-  def index(conn, _params) do
+  import Logger
+
+  def index(conn, params) do
+    Logger.info(inspect conn.assigns)
     conn
-    |> render("dashboard.html")
+    |> render("index.html")
   end
 end

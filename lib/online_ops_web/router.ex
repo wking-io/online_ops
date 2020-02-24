@@ -1,18 +1,30 @@
 defmodule OnlineOpsWeb.Router do
   use OnlineOpsWeb, :router
 
+  pipeline :maybe_auth do
+    plug Guardian.Plug.Pipeline,
+      module: OnlineOpsWeb.Guardian,
+      error_handler: OnlineOpsWeb.SessionController
+    plug Guardian.Plug.VerifySession
+    plug Guardian.Plug.LoadResource, allow_blank: true, key: :current_user
+  end
+
   pipeline :anonymous_browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_user_by_session
+    plug :maybe_auth
+  end
+  
+  pipeline :ensure_auth do
+    plug Guardian.Plug.EnsureAuthenticated
   end
 
   pipeline :authenticated_browser do
     plug :anonymous_browser
-    plug :redirect_unless_signed_in
+    plug :ensure_auth
   end
 
   pipeline :api do
@@ -33,6 +45,7 @@ defmodule OnlineOpsWeb.Router do
 
     get "/signin", SessionController, :new
     post "/signin", SessionController, :create
+    get "/signin/:magic_token", SessionController, :callback
     get "/signout", SessionController, :destroy
   end
 

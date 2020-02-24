@@ -13,7 +13,7 @@ defmodule OnlineOps.Schema.UserToken do
   @doc false
   def changeset(user_token, attrs) do
     user_token
-    |> cast(attrs, [:value])
-    |> validate_required([:value])
+    |> cast(attrs, [:user_id])
+    |> validate_required([:user_id])
   end
 end

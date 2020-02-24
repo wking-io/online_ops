@@ -15,7 +15,7 @@ defmodule OnlineOpsWeb.SessionController do
 
       _ ->
         conn
-        |> assign(:changeset, Users.create_changeset())
+        |> assign(:changeset, Users.create_user_changeset())
         |> assign(:page_title, "Sign in to OnlineOps")
         |> render("new.html")
     end
@@ -36,7 +36,7 @@ defmodule OnlineOpsWeb.SessionController do
 
   def callback(conn, %{"magic_token" => magic_token}) do
     case Guardian.decode_magic(magic_token) do
-      {:ok, user, _claims} ->
+      {:ok, {:ok, user}, _claims} ->
         validate_magic(conn, user)
 
       _ ->
@@ -53,6 +53,7 @@ defmodule OnlineOpsWeb.SessionController do
   defp validate_magic(conn, user) do
     case Users.validate_magic(user.id) do
       {:ok, _} ->
+        Logger.info("here")
         conn
         |> Guardian.Plug.sign_in(user)
         |> redirect(to: Routes.app_path(conn, :index))

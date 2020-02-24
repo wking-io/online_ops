@@ -5,6 +5,8 @@ defmodule OnlineOpsWeb.UserController do
   alias OnlineOps.Schema.User
   alias OnlineOpsWeb.Guardian
 
+  import Logger
+
   def new(conn, _params) do
     case conn.assigns[:current_user] do
       %User{} ->
@@ -13,7 +15,7 @@ defmodule OnlineOpsWeb.UserController do
 
       _ ->
         conn
-        |> assign(:changeset, Users.create_changeset())
+        |> assign(:changeset, Users.create_user_changeset())
         |> assign(:page_title, "Sign up for OnlineOps")
         |> render("new.html")
     end
@@ -26,6 +28,7 @@ defmodule OnlineOpsWeb.UserController do
         render(conn, "magic.html")
         
       {:error, changeset} ->
+        Logger.info(changeset)
         conn
         |> assign(:changeset, changeset)
         |> render("new.html")

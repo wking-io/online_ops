@@ -51,11 +51,6 @@ defmodule OnlineOpsWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
-      import OnlineOpsWeb.Auth,
-        only: [
-          fetch_current_user_by_session: 2,
-          redirect_unless_signed_in: 2
-        ]
     end
   end
 
