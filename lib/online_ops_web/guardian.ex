@@ -3,6 +3,8 @@ defmodule OnlineOpsWeb.Guardian do
   
   alias OnlineOps.Users
 
+  import Logger
+
   @doc """
   No password authentication helpers
   """
@@ -48,12 +50,13 @@ defmodule OnlineOpsWeb.Guardian do
   end
 
   def resource_from_claims(%{"sub" => id}) do
+    Logger.info(id)
     case Users.get_by_id(id) do
-      nil ->
-        {:error, :not_found}
-
-      user ->
+      {:ok, user} ->
         {:ok, user}
+        
+        _ ->
+          {:error, :not_found}
     end
   end
 

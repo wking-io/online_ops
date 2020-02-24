@@ -15,6 +15,7 @@ defmodule OnlineOps.Users do
   Fetches a user by id.
   """
   def get_by_id(id) do
+    Logger.info("Inside: #{inspect id}")
     case Repo.get(User, id) do
       %User{} = user ->
         {:ok, user}
