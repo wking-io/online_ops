@@ -1,4 +1,4 @@
-defmodule OnlineOpsWeb.Gettext do
+defmodule OnlineOps.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 

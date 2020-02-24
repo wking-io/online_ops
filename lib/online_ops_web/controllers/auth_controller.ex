@@ -34,8 +34,7 @@ defmodule OnlineOpsWeb.AuthController do
     # Exchange an auth code for an access token
     client = get_token!(provider, code)
     # Request the user's data with the access token
-    user = get_auth_user(provider, client)
-    |> transform_auth_user
+    user = get_user(provider, client)
 
     # Store the user in the session under `:current_user` and redirect to /.
     # In most cases, we'd probably just store the user's ID that can be used
@@ -54,7 +53,7 @@ defmodule OnlineOpsWeb.AuthController do
 
   defp get_token!("google", code), do: Google.get_token!(code: code)
 
-  defp get_auth_user("google", client) do
+  defp get_user("google", client) do
     case OAuth2.Client.get(client, "https://people.googleapis.com/v1/people/me?personFields=emailAddresses,names,photos") do
       {:ok, %OAuth2.Response{body: user}} ->
         user
@@ -63,26 +62,5 @@ defmodule OnlineOpsWeb.AuthController do
       {:error, %OAuth2.Error{reason: reason}} ->
         Logger.error("Error: #{inspect reason}")
     end
-  end
-
-  defp transform_auth_user(auth_user) do
-    Enum.reduce(auth_user, %{}, transform_auth_user_field)
-  end
-
-  defp transform_auth_user_field({"emailAddresses", data}, acc) do
-    case Enum.reduce_while(data, {:empty}, find_primary_email) do
-      {:found, email} ->
-        Map.put(acc, :email, email)
-      {:empty} ->
-        acc
-    end
-  end
-
-  defp find_primary_email(%{ metadata: %{ primary: true }, value: email }, _acc) do
-    {:found, email}
-  end
-
-  defp find_primary_email(_, acc) do
-    acc
   end
 end

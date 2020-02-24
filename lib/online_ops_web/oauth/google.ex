@@ -4,7 +4,6 @@ defmodule Google do
   """
 
   use OAuth2.Strategy
-  import Logger
 
   alias OAuth2.Strategy.AuthCode
 

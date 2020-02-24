@@ -28,15 +28,18 @@ defmodule OnlineOpsWeb.Router do
 
     get "/", PageController, :index
 
-    get "/login", AuthController, :index
-    get "/signup", AuthController, :new
-    get "/logout", AuthController, :delete
+    get "/signup", UserController, :new
+    post "/signup", UserController, :create
+
+    get "/signin", SessionController, :new
+    post "/signin", SessionController, :create
+    get "/signout", SessionController, :destroy
   end
 
-  scope "/metrics", OnlineOpsWeb do
+  scope "/app", OnlineOpsWeb do
     pipe_through :authenticated_browser
 
-    get "/", PageController, :index
+    get "/", AppController, :index
   end
 
   scope "/auth", OnlineOpsWeb do

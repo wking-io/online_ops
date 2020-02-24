@@ -22,7 +22,7 @@ defmodule OnlineOpsWeb do
       use Phoenix.Controller, namespace: OnlineOpsWeb
 
       import Plug.Conn
-      import OnlineOpsWeb.Gettext
+      import OnlineOps.Gettext
       alias OnlineOpsWeb.Router.Helpers, as: Routes
     end
   end
@@ -40,7 +40,8 @@ defmodule OnlineOpsWeb do
       use Phoenix.HTML
 
       import OnlineOpsWeb.ErrorHelpers
-      import OnlineOpsWeb.Gettext
+      import OnlineOpsWeb.FormHelpers
+      import OnlineOps.Gettext
       alias OnlineOpsWeb.Router.Helpers, as: Routes
     end
   end
@@ -61,7 +62,7 @@ defmodule OnlineOpsWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import OnlineOpsWeb.Gettext
+      import OnlineOps.Gettext
     end
   end
 

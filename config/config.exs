@@ -36,3 +36,11 @@ config :online_ops, Google,
   client_id: System.get_env("GOOGLE_CLIENT_ID"),
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
   redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
+
+  config :online_ops, OnlineOpsWeb.Guardian,
+  issuer: "online_ops",
+  secret_key: "YWkOrTiAUYKAdx6/9scP0wRGf99HLNG9k7DgdGjBD3dMowYJMBV4Btm7CMRvJk2z",
+  token_ttl: %{
+    "magic" => {30, :minutes},
+    "access" => {1, :days}
+  }
