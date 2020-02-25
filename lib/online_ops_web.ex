@@ -51,6 +51,7 @@ defmodule OnlineOpsWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import OnlineOpsWeb.Plug.Session, only: [ensure_user: 2]
     end
   end
 

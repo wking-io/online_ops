@@ -20,6 +20,7 @@ defmodule OnlineOpsWeb.Router do
   
   pipeline :ensure_auth do
     plug Guardian.Plug.EnsureAuthenticated
+    plug :ensure_user
   end
 
   pipeline :authenticated_browser do
