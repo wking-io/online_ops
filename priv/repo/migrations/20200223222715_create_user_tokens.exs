@@ -8,6 +8,6 @@ defmodule OnlineOps.Repo.Migrations.CreateUserTokens do
       timestamps(updated_at: false)
     end
 
-    create index(:user_tokens, [:user_id])
+    create unique_index(:user_tokens, [:user_id])
   end
 end

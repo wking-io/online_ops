@@ -48,7 +48,6 @@ defmodule OnlineOpsWeb.Guardian do
   end
 
   def resource_from_claims(%{"sub" => id}) do
-    Logger.info(id)
     case Users.get_by_id(id) do
       {:ok, user} ->
         {:ok, user}
@@ -63,7 +62,7 @@ defmodule OnlineOpsWeb.Guardian do
     alias OnlineOpsWeb.Endpoint
     import OnlineOpsWeb.Router.Helpers
 
-    Users.create_magic(%{user_id: user.id})
+    Users.create_user_token(%{user_id: user.id})
 
     Logger.info """
 

@@ -9,6 +9,8 @@ defmodule OnlineOps.Users do
   alias OnlineOps.Schema.User
   alias OnlineOps.Schema.UserToken
 
+  import Logger
+
   @doc """
   Fetches a user by id.
   """
@@ -47,37 +49,32 @@ defmodule OnlineOps.Users do
 
   def create_user_token(attrs \\ %{}) do
     create_user_token_changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(on_conflict: :replace_all, conflict_target: :user_id)
   end
 
   def create_user_token_changeset(attrs \\ %{}) do
     UserToken.changeset(%UserToken{}, attrs)
   end
 
-  def create_magic(attrs \\ %{}) do
-    create_user_token_changeset(attrs)
-    |> Repo.insert()
-  end
-
-  def validate_magic(id) do
+  def validate_user_token(id) do
     case Repo.get_by(UserToken, user_id: id) do
       nil ->
         {:error, :not_found}
       
       token ->
-        delete_magic(token.id)
-        {:ok, :found}
+        case delete_user_token(token.id) do
+          {:ok, _} ->
+            Logger.info("Token deleted")
+            {:ok, :found}
+
+          error ->
+            Logger.error("Token delete error: #{inspect error}")
+            {:ok, :found}
+        end
     end
   end
 
-  defp delete_magic(id) do
-    user_token = create_user_changeset(%{user_id: id})
-    case Repo.delete(user_token) do
-      {:ok, _} ->
-        {:ok, :token_deleted}
-      
-      error ->
-        error
-    end
+  defp delete_user_token(id) do
+    Repo.delete(%UserToken{id: id})
   end
 end

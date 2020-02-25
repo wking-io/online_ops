@@ -49,7 +49,7 @@ defmodule OnlineOpsWeb.SessionController do
   end
 
   defp validate_magic(conn, user) do
-    case Users.validate_magic(user.id) do
+    case Users.validate_user_token(user.id) do
       {:ok, _} ->
         conn
         |> Guardian.Plug.sign_in(user)

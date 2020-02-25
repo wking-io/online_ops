@@ -20,6 +20,6 @@ defmodule OnlineOps.Schema.User do
     |> cast(attrs, [:first_name, :last_name, :email])
     |> validate_required([:first_name, :last_name, :email])
     |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email)
+    |> unique_constraint(:email, name: :users_email_index)
   end
 end
