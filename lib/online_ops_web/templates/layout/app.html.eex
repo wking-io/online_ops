@@ -9,10 +9,7 @@
   </head>
   <body class="text-black font-sans">
     <header class="p-4">
-      <h1 class="flex items-center font-extrabold text-xl">
-        <span class="h-12"><%= render(OnlineOpsWeb.UIView, "logo.html", classes: "w-auto h-full") %></span>
-        <span class="ml-3">OnlineOps</span>
-      </h1>
+      <%= render OnlineOpsWeb.UIView, "logo.html", classes: "flex items-center font-extrabold text-xl", height: "h-12", tag: :h1 %>
     </header>
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>

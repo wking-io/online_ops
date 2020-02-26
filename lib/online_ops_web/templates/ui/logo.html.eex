@@ -1,21 +1,8 @@
-<%= content_tag(:svg, class: @classes, "xmlns": "http://www.w3.org/2000/svg", "xmlns:xlink": "http://www.w3.org/1999/xlink", "viewBox": "0 0 1000 1000") do %>
-  <defs>
-    <linearGradient id="gradient-dark" y1="500" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#00707a"/>
-      <stop offset="1" stop-color="#00abba"/>
-    </linearGradient>
-    <linearGradient id="gradient" x1="25" y1="475" x2="925" y2="475" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#00a1af"/>
-      <stop offset="1" stop-color="#50c5b6"/>
-    </linearGradient>
-    <linearGradient id="gradient-light" x1="50" y1="450" x2="850" y2="450" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#50c5b6"/>
-      <stop offset="0.15" stop-color="#64cab7"/>
-      <stop offset="1" stop-color="#cae6bf"/>
-    </linearGradient>
-  </defs>
-  <circle class="cls-1" cx="500" cy="500" r="500" fill="url(#gradient-dark)"/>
-  <circle class="cls-2" cx="475" cy="475" r="450" fill="url(#gradient)"/>
-  <circle class="cls-3" cx="450" cy="450" r="400" fill="url(#gradient-light)"/>
-  <circle class="cls-4" cx="470" cy="470" r="250" fill="#ffffff"/>
-<%= end %>
+<%=
+  content_tag(@tag, class: @classes) do
+    [content_tag(:span, class: @height) do 
+      render(OnlineOpsWeb.UIView, "logo-icon.html", classes: "w-auto h-full")
+    end,
+    content_tag(:span, "OnlineOps", class: "ml-3")]
+  end
+%>

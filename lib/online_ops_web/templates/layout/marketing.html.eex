@@ -4,16 +4,43 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>OnlineOps · Phoenix Framework</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="csrf_token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
+    <meta name="env" content="<%= Application.get_env(:online_ops, :env) %>">
+
+    <%= if assigns[:module] do %>
+    <meta name="module" content="<%= @module %>">
+    <% end %>
+
+    <%= if assigns[:page_title] do %>
+    <title><%= @page_title %></title>
+    <% else %>
+    <title>Relevant analyitcs for growing your business | OnlineOps</title>
+    <% end %>
+
+    <%= if assigns[:og] do %>
+    <meta property="og:title" content="<%= @og.title %>">
+    <meta property="og:type" content="text/html">
+    <meta property="og:image" content="<%= Routes.static_url(@conn, @og.image) %>">
+    <meta property="og:description" content="<%= @og.description %>">
+    <meta property="og:url" content="<%= @og.url %>">
+    <% end %>
+
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/marketing.css") %>"/>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_url(@conn, "/favicon/apple-touch-icon.png") %>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_url(@conn, "/favicon/favicon-32x32.png") %>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= Routes.static_url(@conn, "/favicon/favicon-16x16.png") %>">
+    <link rel="manifest" href="<%= Routes.static_url(@conn, "/favicon/site.webmanifest") %>">
+    <link rel="mask-icon" href="<%= Routes.static_url(@conn, "/favicon/safari-pinned-tab.svg") %>" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
   </head>
+  
   <body class="font-sans text-black">
-    <header>
-      <h1><%= render(OnlineOpsWeb.UIView, "logo.html", classes: "w-auto h-full") %> <span>OnlineOps</span></h1>
-    </header>
+    <%= render OnlineOpsWeb.PageView, "header.html" %>
     <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
       <%= render @view_module, @view_template, assigns %>
     </main>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/marketing.js") %>"></script>

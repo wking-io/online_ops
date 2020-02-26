@@ -1,0 +1,3 @@
+<header class="p-4">
+  <%= render OnlineOpsWeb.UIView, "logo.html", classes: "flex items-center font-extrabold text-xl", height: "h-12", tag: :h1 %>
+</header>

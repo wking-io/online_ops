@@ -28,12 +28,20 @@ defmodule OnlineOpsWeb.Router do
     plug :ensure_auth
   end
 
+  pipeline :marketing_layout do
+    plug :put_layout, {OnlineOpsWeb.LayoutView, :marketing}
+  end
+
+  pipeline :app_layout do
+    plug :put_layout, {OnlineOpWeb.LayoutView, :app}
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
   scope "/", OnlineOpsWeb do
-    pipe_through :anonymous_browser
+    pipe_through [:anonymous_browser, :marketing_layout]
 
     get "/", PageController, :index
 
@@ -47,7 +55,7 @@ defmodule OnlineOpsWeb.Router do
   end
 
   scope "/app", OnlineOpsWeb do
-    pipe_through :authenticated_browser
+    pipe_through [:authenticated_browser, :app_layout]
 
     get "/", AppController, :index
   end
