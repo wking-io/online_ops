@@ -5,20 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>OnlineOps · Phoenix Framework</title>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/marketing.css") %>"/>
   </head>
-  <body class="text-black font-sans">
-    <header class="p-4">
-      <h1 class="flex items-center font-extrabold text-xl">
-        <span class="h-12"><%= render(OnlineOpsWeb.UIView, "logo.html", classes: "w-auto h-full") %></span>
-        <span class="ml-3">OnlineOps</span>
-      </h1>
+  <body class="font-sans text-black">
+    <header>
+      <h1><%= render(OnlineOpsWeb.UIView, "logo.html", classes: "w-auto h-full") %> <span>OnlineOps</span></h1>
     </header>
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
       <%= render @view_module, @view_template, assigns %>
     </main>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/marketing.js") %>"></script>
   </body>
 </html>
