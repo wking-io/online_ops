@@ -9,8 +9,6 @@ defmodule OnlineOps.Users do
   alias OnlineOps.Schema.User
   alias OnlineOps.Schema.UserToken
 
-  import Logger
-
   @doc """
   Fetches a user by id.
   """
@@ -64,11 +62,9 @@ defmodule OnlineOps.Users do
       token ->
         case delete_user_token(token.id) do
           {:ok, _} ->
-            Logger.info("Token deleted")
             {:ok, :found}
 
           error ->
-            Logger.error("Token delete error: #{inspect error}")
             {:ok, :found}
         end
     end

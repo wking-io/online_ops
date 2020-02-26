@@ -32,10 +32,6 @@ defmodule OnlineOpsWeb.Router do
     plug :accepts, ["json"]
   end
 
-  pipeline :auth do
-    plug OnlineOpsWeb.AuthPlug
-  end
-
   scope "/", OnlineOpsWeb do
     pipe_through :anonymous_browser
 
