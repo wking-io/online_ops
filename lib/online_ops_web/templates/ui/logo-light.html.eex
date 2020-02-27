@@ -1,0 +1,8 @@
+<%=
+  content_tag(@tag, class: @classes <> " text-white") do
+    [content_tag(:span, class: @height) do 
+      render(OnlineOpsWeb.UIView, "logo-icon-light.html", classes: "w-auto h-full")
+    end,
+    content_tag(:span, "OnlineOps", class: "ml-3")]
+  end
+%>

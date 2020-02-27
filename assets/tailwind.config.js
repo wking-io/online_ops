@@ -3,8 +3,8 @@ const colors = {
   white: '#ffffff',
   transparent: 'transparent',
   brand: {
-    100: '#46C8D3',
-    200: '#699DC9',
+    100: '#CAE6BF',
+    200: '#50C5B6',
     300: '#00A1AF',
     400: '#00707A',
     500: '#064E55'

@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind utilities;
+
+@import "modules/bg.css";
+
+.bg-gradient--page {
+  background-image: radial-gradient(
+      circle at -5% 35%,
+      theme('colors.brand.300'),
+      rgba(theme('colors.brand.200'), 0) 60%
+    ),
+    radial-gradient(circle at 90% 0%, theme('colors.brand.100'), rgba(theme('colors.brand.200'), 0) 70%),
+    radial-gradient(circle at 90% 100%, theme('colors.brand.500'), rgba(theme('colors.brand.200'), 0) 80%),
+    linear-gradient(theme('colors.brand.200'), theme('colors.brand.200'));
+  background-size: cover;
+  background-repeat: no-repeat;
+}

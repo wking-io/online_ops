@@ -28,6 +28,10 @@ defmodule OnlineOpsWeb.Router do
     plug :ensure_auth
   end
 
+  pipeline :auth_layout do
+    plug :put_layout, {OnlineOpsWeb.LayoutView, :auth}
+  end
+
   pipeline :marketing_layout do
     plug :put_layout, {OnlineOpsWeb.LayoutView, :marketing}
   end
@@ -41,9 +45,7 @@ defmodule OnlineOpsWeb.Router do
   end
 
   scope "/", OnlineOpsWeb do
-    pipe_through [:anonymous_browser, :marketing_layout]
-
-    get "/", PageController, :index
+    pipe_through [:anonymous_browser, :auth_layout]
 
     get "/signup", UserController, :new
     post "/signup", UserController, :create
@@ -52,6 +54,12 @@ defmodule OnlineOpsWeb.Router do
     post "/signin", SessionController, :create
     get "/signin/:magic_token", SessionController, :callback
     get "/signout", SessionController, :destroy
+  end
+
+  scope "/", OnlineOpsWeb do
+    pipe_through [:anonymous_browser, :marketing_layout]
+
+    get "/", PageController, :index
   end
 
   scope "/app", OnlineOpsWeb do

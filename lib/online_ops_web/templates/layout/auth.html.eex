@@ -27,7 +27,7 @@
     <meta property="og:url" content="<%= @og.url %>">
     <% end %>
 
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/auth.css") %>"/>
 
     <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_url(@conn, "/favicon/apple-touch-icon.png") %>">
     <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_url(@conn, "/favicon/favicon-32x32.png") %>">
@@ -38,11 +38,13 @@
     <meta name="theme-color" content="#ffffff">
   </head>
   
-  <body class="font-sans text-black">
-    <%= render OnlineOpsWeb.PageView, "header.html" %>
-    <main role="main" class="container">
+  <body class="font-sans text-black bg-gradient--page">
+    <main role="main" class="flex flex-col items-center justify-center h-full min-h-screen">
+      <a href="/" class="block">
+        <%= render OnlineOpsWeb.UIView, "logo-light.html", classes: "flex items-center font-extrabold text-4xl", height: "h-20", tag: :span %>
+      </a>
       <%= render @view_module, @view_template, assigns %>
     </main>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/auth.js") %>"></script>
   </body>
 </html>

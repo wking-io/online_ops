@@ -1,0 +1,8 @@
+.bg-gradient--page {
+  background-image: radial-gradient(circle at 90% 100%, theme('colors.brand.500'), rgba(theme('colors.brand.200'), 0)),
+    radial-gradient(circle at 0% -5%, theme('colors.brand.300'), rgba(theme('colors.brand.200'), 0)),
+    radial-gradient(circle at 85% 0%, theme('colors.brand.100'), rgba(theme('colors.brand.200'), 0)),
+    theme('colors.brand.200');
+  background-size: cover;
+  background-repeat: no-repeat;
+}

@@ -1,4 +1,10 @@
-<%= content_tag(:svg, class: @classes, xmlns: "http://www.w3.org/2000/svg", "xmlns:xlink": "http://www.w3.org/1999/xlink", viewBox: "0 0 1000 1000") do %>
+<%=
+content_tag(
+  :svg,
+  class: @classes,
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 1000 1000"
+) do %>
   <defs>
     <linearGradient id="gradient-dark" y1="500" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#00707a"/>

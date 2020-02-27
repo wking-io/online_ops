@@ -1,43 +1,42 @@
 <%= if get_flash(@conn, :error) do %>
   <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
 <% end %>
-
-<div class="container mx-auto">
-
-  <div class="mx-auto max-w-400px px-8 pb-16">
-    <%= form_for @changeset, Routes.user_path(@conn, :create), fn f -> %>
-      <input type="hidden" name="key" value="<%= @conn.params["key"] %>" />
-
-      <div class="pb-4 max-w-xs <%= error_shake(@changeset) %>">
-        <h1 class="mb-6 text-3xl tracking-semi-tight font-bold">Sign up for OnlineOps</h1>
-        <div class="pb-6">
-          <%= label f, :email, gettext("Email address"), class: "input-label" %>
-          <%= text_input f, :email, class: input_classes(f, :email), autofocus: true, placeholder: "jane@smithco.com" %>
-          <%= error_tag f, :email, class: "form-errors" %>
+  <div class="mx-auto max-w-lg w-full mt-12">
+    <div class="flex items-baseline font-bold text-white">
+      <a class="mr-4" href="/signup">Sign up</a>
+      <a class="opacity-75 flex-1" href="/signin">Sign in</a>
+      <a class="opacity-75" href="/forgot">Forgot email?</a>
+    </div>
+    <%= form_for @changeset, Routes.user_path(@conn, :create), [class: "mt-6 w-full"], fn f -> %>
+      <div class="<%= error_shake(@changeset) %>">
+        <div class="bg-white p-2 pl-3 rounded">
+          <div class="flex justify-between items-start">
+            <%= label f, :email, gettext("Email address"), class: "text-sm text-grey-500 font-bold pb-2" %>
+            <%= error_tag f, :email, class: "text-sm border border-error text-error rounded leading-none p-1" %>
+          </div>
+          <%= text_input f, :email, class: "pb-1 w-full", autofocus: true, placeholder: "jane@smithco.com" %>
         </div>
 
-        <div class="pb-6">
-          <%= label f, :first_name, gettext("Full Name"), class: "input-label" %>
-          <div class="flex">
-            <div class="flex-1 mr-2">
-              <%= text_input f, :first_name, class: input_classes(f, :first_name), placeholder: "Jane" %>
-              <%= error_tag f, :first_name, class: "form-errors" %>
+        <div class="flex mt-4">
+          <div class="flex-1 mr-2 bg-white p-2 pl-3 rounded">
+            <div class="flex justify-between items-start">
+              <%= label f, :first_name, gettext("First Name"), class: "text-sm text-grey-500 font-bold pb-2" %>
+              <%= error_tag f, :first_name, class: "text-sm border border-error text-error rounded leading-none p-1" %>
             </div>
+            <%= text_input f, :first_name, class: "pb-1 w-full", placeholder: "Jane" %>
+          </div>
 
-            <div class="flex-1">
-              <%= text_input f, :last_name, class: input_classes(f, :last_name), placeholder: "Smith" %>
-              <%= error_tag f, :last_name, class: "form-errors" %>
+          <div class="flex-1 ml-2 bg-white p-2 pl-3 rounded">
+            <div class="flex justify-between items-start">
+              <%= label f, :last_name, gettext("Last Name"), class: "text-sm text-grey-500 font-bold pb-2" %>
+              <%= error_tag f, :last_name, class: "text-sm border border-error text-error rounded leading-none p-1" %>
             </div>
+            <%= text_input f, :last_name, class: "pb-1 w-full", placeholder: "Smith" %>
           </div>
         </div>
 
-        <%= submit gettext("Get started"), class: "btn btn-blue" %>
+        <%= submit gettext("Get started"), class: "btn btn-gradient--dark" %>
       </div>
-
-      <p class="text-sm">
-        <%= gettext "Already have a user account?" %>
-        <%= link gettext("Sign in"), to: Routes.session_path(@conn, :new), class: "text-blue" %>
-      </p>
     <% end %>
   </div>
 </div>
