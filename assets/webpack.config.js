@@ -16,13 +16,13 @@ const postcssOptions = (isProduction) => {
     require('postcss-easy-import'),
     require('tailwindcss')(paths.tailwind),
     require('postcss-flexbugs-fixes'),
-    autoprefixer({
-      flexbox: 'no-2009'
-    }),
     require('postcss-hexrgba')
   ];
 
   const productionOptions = [
+    autoprefixer({
+      flexbox: 'no-2009'
+    }),
     require('cssnano'),
     purgecss({
       content: paths.content,
