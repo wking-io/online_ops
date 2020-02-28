@@ -1,11 +1,12 @@
-defmodule OnlineOpsWeb.Guardian do
+defmodule OnlineOps.Guardian do
   use Guardian, otp_app: :online_ops
-  
-  alias OnlineOps.Users
 
   @doc """
   No password authentication helpers
   """
+
+  alias OnlineOps.Email
+  alias OnlineOps.Users
 
   @magic "magic"
   @access "access"
@@ -31,13 +32,6 @@ defmodule OnlineOpsWeb.Guardian do
       {:ok, token, claims}
     end
   end
-  
-  def send_magic_link(resource, claims \\ %{}, params \\ %{}) do
-    with {:ok, magic_token, claims} <- encode_magic(resource, claims) do
-      deliver_magic_link(resource, magic_token, params)
-      {:ok, magic_token, claims}
-    end
-  end
 
   @doc """
   Guardian implementation
@@ -55,21 +49,5 @@ defmodule OnlineOpsWeb.Guardian do
         _ ->
           {:error, :not_found}
     end
-  end
-
-  def deliver_magic_link(user, magic_token, _opts) do
-    require Logger
-    alias OnlineOpsWeb.Endpoint
-    import OnlineOpsWeb.Router.Helpers
-
-    Users.create_user_token(%{user_id: user.id})
-
-    Logger.info """
-
-    This is the magic link:
-
-      #{session_url(Endpoint, :callback, magic_token)}
-
-    """
   end
 end

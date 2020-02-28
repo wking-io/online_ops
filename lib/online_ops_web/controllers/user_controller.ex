@@ -2,8 +2,8 @@ defmodule OnlineOpsWeb.UserController do
   use OnlineOpsWeb, :controller
 
   alias OnlineOps.Users
-  alias OnlineOps.Schema.User
-  alias OnlineOpsWeb.Guardian
+  alias OnlineOps.Schemas.User
+  alias OnlineOps.Guardian
 
   def new(conn, _params) do
     case conn.assigns[:current_user] do
@@ -22,7 +22,7 @@ defmodule OnlineOpsWeb.UserController do
   def create(conn, %{"user" => user}) do
     case Users.create_user(user) do
       {:ok, user} ->
-        {:ok, _, _} = Guardian.send_magic_link(user)
+        {:ok, _} = Users.send_magic_link(user)
         render(conn, "magic.html")
         
       {:error, changeset} ->

@@ -16,6 +16,11 @@ config :online_ops, OnlineOpsWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+# Configure the mailer
+config :online_ops, OnlineOps.Mailer,
+  adapter: Bamboo.PostmarkAdapter,
+  api_key: System.get_env("POSTMARK_API_KEY")
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

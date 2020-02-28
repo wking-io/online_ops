@@ -30,6 +30,12 @@ config :online_ops, OnlineOpsWeb.Endpoint,
     ]
   ]
 
+# Do not include metadata nor timestamps in development logs
+config :logger, :console, format: "[$online_ops] $message\n"
+
+# Mailer
+config :online_ops, OnlineOps.Mailer, adapter: Bamboo.LocalAdapter
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

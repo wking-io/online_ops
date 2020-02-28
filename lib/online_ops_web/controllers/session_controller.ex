@@ -2,8 +2,8 @@ defmodule OnlineOpsWeb.SessionController do
   use OnlineOpsWeb, :controller
 
   alias OnlineOps.Users
-  alias OnlineOps.Schema.User
-  alias OnlineOpsWeb.Guardian
+  alias OnlineOps.Schemas.User
+  alias OnlineOps.Guardian
 
   def new(conn, _params) do
     case conn.assigns[:current_user] do
@@ -22,7 +22,7 @@ defmodule OnlineOpsWeb.SessionController do
   def create(conn, %{"user" => %{"email" => email}}) do
     case Users.get_by_email(email) do
       {:ok, user} ->
-        {:ok, _, _} = Guardian.send_magic_link(user)
+        {:ok, _} = Users.send_magic_link(user)
         render(conn, "magic.html")
         
       {:error, changeset} ->
@@ -35,7 +35,7 @@ defmodule OnlineOpsWeb.SessionController do
   def callback(conn, %{"magic_token" => magic_token}) do
     case Guardian.decode_magic(magic_token) do
       {:ok, user, _claims} ->
-        validate_magic(conn, user)
+        sign_in(conn, user)
 
       _ ->
         invalid_link(conn)
@@ -48,23 +48,17 @@ defmodule OnlineOpsWeb.SessionController do
     |> redirect(to: Routes.page_path(conn, :index))
   end
 
-  defp validate_magic(conn, user) do
-    case Users.validate_user_token(user.id) do
-      {:ok, _} ->
-        conn
-        |> Guardian.Plug.sign_in(user)
-        |> redirect(to: Routes.app_path(conn, :index))
-
-      {:error, _} ->
-        invalid_link(conn)
-    end
-  end
-
   def auth_error(conn, _error, _opts) do
     conn
     |> put_flash(:error, "Authentication error.")
     |> redirect(to: Routes.session_path(conn, :new))
     |> halt()
+  end
+
+  defp sign_in(conn, user) do
+    conn
+        |> Guardian.Plug.sign_in(user)
+        |> redirect(to: Routes.app_path(conn, :index))
   end
 
   defp invalid_link(conn) do

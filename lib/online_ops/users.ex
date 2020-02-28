@@ -5,9 +5,11 @@ defmodule OnlineOps.Users do
   
   import OnlineOps.Gettext
 
+  alias OnlineOps.Email
+  alias OnlineOps.Guardian
+  alias OnlineOps.Mailer
   alias OnlineOps.Repo
-  alias OnlineOps.Schema.User
-  alias OnlineOps.Schema.UserToken
+  alias OnlineOps.Schemas.User
 
   @doc """
   Fetches a user by id.
@@ -32,10 +34,6 @@ defmodule OnlineOps.Users do
     end
   end
 
-  def get_all do
-    Repo.all(User)
-  end
-
   def create_user(attrs \\ %{}) do
     create_user_changeset(attrs)
     |> Repo.insert()
@@ -45,32 +43,12 @@ defmodule OnlineOps.Users do
     User.changeset(%User{}, attrs)
   end
 
-  def create_user_token(attrs \\ %{}) do
-    create_user_token_changeset(attrs)
-    |> Repo.insert(on_conflict: :replace_all, conflict_target: :user_id)
-  end
+  def send_magic_link(%User{} = user) do
+    {:ok, magic_token, _claims} = Guardian.encode_magic(user)
 
-  def create_user_token_changeset(attrs \\ %{}) do
-    UserToken.changeset(%UserToken{}, attrs)
-  end
+    Email.magic_link(magic_token, user)
+    |> Mailer.deliver_now()
 
-  def validate_user_token(id) do
-    case Repo.get_by(UserToken, user_id: id) do
-      nil ->
-        {:error, :not_found}
-      
-      token ->
-        case delete_user_token(token.id) do
-          {:ok, _} ->
-            {:ok, :found}
-
-          error ->
-            {:ok, :found}
-        end
-    end
-  end
-
-  defp delete_user_token(id) do
-    Repo.delete(%UserToken{id: id})
+    {:ok, magic_token}
   end
 end

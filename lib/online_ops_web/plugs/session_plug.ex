@@ -1,6 +1,6 @@
 defmodule OnlineOpsWeb.Plug.Session do
   alias OnlineOpsWeb.Router.Helpers, as: Routes
-  alias OnlineOps.Schema.User
+  alias OnlineOps.Schemas.User
 
   import Phoenix.Controller, only: [redirect: 2]
   import Plug.Conn, only: [assign: 3]

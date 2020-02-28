@@ -44,7 +44,9 @@ defmodule OnlineOps.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:oauth2, "~> 2.0"},
-      {:guardian, "~> 2.0"}
+      {:guardian, "~> 2.0"},
+      {:bamboo, "~> 1.4"},
+      {:bamboo_postmark, "~> 0.6"}
     ]
   end
 

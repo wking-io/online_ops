@@ -1,7 +1,7 @@
 defmodule OnlineOpsWeb.AppController do
   use OnlineOpsWeb, :controller
 
-  def index(conn, params) do
+  def index(conn, _params) do
     conn
     |> render("index.html")
   end

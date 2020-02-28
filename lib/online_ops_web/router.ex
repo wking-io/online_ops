@@ -3,7 +3,7 @@ defmodule OnlineOpsWeb.Router do
 
   pipeline :maybe_auth do
     plug Guardian.Plug.Pipeline,
-      module: OnlineOpsWeb.Guardian,
+      module: OnlineOps.Guardian,
       error_handler: OnlineOpsWeb.SessionController
     plug Guardian.Plug.VerifySession
     plug Guardian.Plug.LoadResource, allow_blank: true
@@ -37,7 +37,7 @@ defmodule OnlineOpsWeb.Router do
   end
 
   pipeline :app_layout do
-    plug :put_layout, {OnlineOpWeb.LayoutView, :app}
+    plug :put_layout, {OnlineOpsWeb.LayoutView, :app}
   end
 
   pipeline :api do
@@ -73,5 +73,10 @@ defmodule OnlineOpsWeb.Router do
 
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
+  end
+
+  if Mix.env == :dev do
+    # If using Phoenix
+    forward "/sent_emails", Bamboo.SentEmailViewerPlug
   end
 end

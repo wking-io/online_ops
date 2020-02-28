@@ -1,15 +1,13 @@
-defmodule OnlineOps.Schema.User do
+defmodule OnlineOps.Schemas.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias OnlineOps.Schema.UserToken
-
+  @type t :: %__MODULE__{}
+  
   schema "users" do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
-
-    has_one :token, UserToken
 
     timestamps()
   end
