@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const purgecss = require('@fullhuman/postcss-purgecss');
 const paths = require('./paths');
 
 // Options for PostCSS as we reference these options twice
@@ -21,10 +22,20 @@ const postcssOptions = (isProduction) => {
     require('postcss-hexrgba')
   ];
 
+  const productionOptions = [
+    require('cssnano'),
+    purgecss({
+      content: paths.content,
+      defaultExtractor: (content) => {
+        return content.match(/[\w-/:]+(?<!:)/g) || [];
+      }
+    })
+  ];
+
   return {
     // Necessary for external CSS imports to work
     ident: 'postcss',
-    plugins: [ ...defaultOptions, ...(isProduction ? [ require('cssnano') ] : []) ]
+    plugins: [ ...defaultOptions, ...(isProduction ? productionOptions : []) ]
   };
 };
 
