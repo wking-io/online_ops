@@ -3,7 +3,6 @@ defmodule OnlineOpsWeb.UserController do
 
   alias OnlineOps.Users
   alias OnlineOps.Schemas.User
-  alias OnlineOps.Guardian
 
   def new(conn, _params) do
     case conn.assigns[:current_user] do

@@ -1,8 +1,14 @@
 defmodule OnlineOpsWeb.PageControllerTest do
-  use OnlineOpsWeb.ConnCase
+  use OnlineOpsWeb.ConnCase, async: true
 
-  test "GET /", %{conn: conn} do
-    conn = get(conn, "/")
-    assert html_response(conn, 200) =~ "Welcome to Phoenix!"
+  describe "GET /" do
+    test "renders the hero CTA", %{conn: conn} do
+      body = 
+        conn
+        |> get("/")
+        |> html_response(200)
+
+      assert body =~ "data-cta=\"hero\""
+    end
   end
 end

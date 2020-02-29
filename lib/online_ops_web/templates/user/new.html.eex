@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <%= submit gettext("Get started"), class: "btn btn-gradient--dark" %>
+        <%= submit gettext("Get started"), class: "btn btn-gradient--dark", data: [submit: "signup"] %>
       </div>
     <% end %>
   </div>

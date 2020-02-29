@@ -5,7 +5,7 @@ defmodule OnlineOpsWeb.AuthController do
 
   use OnlineOpsWeb, :controller
 
-  import Logger
+  require Logger
 
   @doc """
   This action is reached via `/auth/:provider` and redirects to the OAuth2 provider

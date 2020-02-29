@@ -4,8 +4,7 @@ defmodule OnlineOps.Guardian do
   @doc """
   No password authentication helpers
   """
-
-  alias OnlineOps.Email
+  
   alias OnlineOps.Users
 
   @magic "magic"

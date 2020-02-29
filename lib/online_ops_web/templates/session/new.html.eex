@@ -26,3 +26,28 @@
     <% end %>
   </div>
 </div>
+
+<%= if get_flash(@conn, :error) do %>
+  <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
+<% end %>
+  <div class="mx-auto max-w-lg w-full mt-12">
+    <div class="flex items-baseline font-bold text-white" data-active="signin">
+      <a class="mr-4" href="/signup"><%= gettext("Sign up") %></a>
+      <a class="opacity-75 flex-1" href="/signin"><%= gettext("Sign in") %></a>
+      <a class="opacity-75" href="/forgot"><%= gettext("Forgot email?") %></a>
+    </div>
+    <%= form_for @changeset, Routes.user_path(@conn, :create), [class: "mt-6 w-full"], fn f -> %>
+      <div class="<%= error_shake(@changeset) %>">
+        <div class="bg-white p-2 pl-3 rounded">
+          <div class="flex justify-between items-start">
+            <%= label f, :email, gettext("Email address"), class: "text-sm text-grey-500 font-bold pb-2" %>
+            <%= error_tag f, :email, class: "text-sm border border-error text-error rounded leading-none p-1" %>
+          </div>
+          <%= text_input f, :email, class: "pb-1 w-full", autofocus: true, placeholder: "jane@smithco.com" %>
+        </div>
+
+        <%= submit gettext("Sign Into Account"), class: "btn btn-gradient--dark" %>
+      </div>
+    <% end %>
+  </div>
+</div>
