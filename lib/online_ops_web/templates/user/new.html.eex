@@ -7,9 +7,9 @@
       <a class="opacity-75 flex-1" href="/signin">Sign in</a>
       <a class="opacity-75" href="/forgot">Forgot email?</a>
     </div>
-    <%= form_for @changeset, Routes.user_path(@conn, :create), [class: "mt-6 w-full"], fn f -> %>
+    <%= form_for @changeset, Routes.user_path(@conn, :create), [class: "mt-6 w-full", data: [form: "signup"]], fn f -> %>
       <div class="<%= error_shake(@changeset) %>">
-        <div class="bg-white p-2 pl-3 rounded">
+        <div class="oo-input bg-white p-2 pl-3 rounded shadow">
           <div class="flex justify-between items-start">
             <%= label f, :email, gettext("Email address"), class: "text-sm text-grey-500 font-bold pb-2" %>
             <%= error_tag f, :email, class: "text-sm border border-error text-error rounded leading-none p-1", data: [ "field-error": "email" ] %>
@@ -18,7 +18,7 @@
         </div>
 
         <div class="flex mt-4">
-          <div class="flex-1 mr-2 bg-white p-2 pl-3 rounded">
+          <div class="oo-input flex-1 mr-2 bg-white p-2 pl-3 rounded shadow">
             <div class="flex justify-between items-start">
               <%= label f, :first_name, gettext("First Name"), class: "text-sm text-grey-500 font-bold pb-2" %>
               <%= error_tag f, :first_name, class: "text-sm border border-error text-error rounded leading-none p-1", data: [ "field-error": "first_name" ] %>
@@ -26,7 +26,7 @@
             <%= text_input f, :first_name, class: "pb-1 w-full", placeholder: "Jane" %>
           </div>
 
-          <div class="flex-1 ml-2 bg-white p-2 pl-3 rounded">
+          <div class="oo-input flex-1 ml-2 bg-white p-2 pl-3 rounded shadow">
             <div class="flex justify-between items-start">
               <%= label f, :last_name, gettext("Last Name"), class: "text-sm text-grey-500 font-bold pb-2" %>
               <%= error_tag f, :last_name, class: "text-sm border border-error text-error rounded leading-none p-1", data: [ "field-error": "last_name" ] %>
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <%= submit gettext("Get started"), class: "btn btn-gradient--dark", data: [submit: "signup"] %>
+        <%= submit gettext("Get started"), class: "btn btn-lg btn-gradient--dark mt-4 shadow hover:shadow-md", data: [submit: "signup"] %>
       </div>
     <% end %>
   </div>

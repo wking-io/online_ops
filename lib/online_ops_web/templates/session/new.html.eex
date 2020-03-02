@@ -1,42 +1,13 @@
 <%= if get_flash(@conn, :error) do %>
   <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
 <% end %>
-
-<div class="container mx-auto">
-
-  <div class="mx-auto max-w-400px px-8 pb-16">
-    <%= form_for @changeset, Routes.session_path(@conn, :create), fn f -> %>
-      <input type="hidden" name="key" value="<%= @conn.params["key"] %>" />
-
-      <div class="pb-4 max-w-xs <%= error_shake(@changeset) %>">
-        <h1 class="mb-6 text-3xl tracking-semi-tight font-bold">Sign in for OnlineOps</h1>
-        <div class="pb-6">
-          <%= label f, :email, gettext("Email address"), class: "input-label" %>
-          <%= text_input f, :email, class: input_classes(f, :email), autofocus: true, placeholder: "jane@smithco.com" %>
-          <%= error_tag f, :email, class: "form-errors" %>
-        </div>
-
-        <%= submit gettext("Sign In"), class: "btn btn-blue" %>
-      </div>
-
-      <p class="text-sm">
-        <%= gettext "Already have a user account?" %>
-        <%= link gettext("Sign in"), to: Routes.session_path(@conn, :new), class: "text-blue" %>
-      </p>
-    <% end %>
-  </div>
-</div>
-
-<%= if get_flash(@conn, :error) do %>
-  <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
-<% end %>
   <div class="mx-auto max-w-lg w-full mt-12">
-    <div class="flex items-baseline font-bold text-white" data-active="signin">
-      <a class="mr-4" href="/signup"><%= gettext("Sign up") %></a>
-      <a class="opacity-75 flex-1" href="/signin"><%= gettext("Sign in") %></a>
+    <div class="flex items-baseline font-bold text-white">
+      <a class="opacity-75 mr-4" href="/signup"><%= gettext("Sign up") %></a>
+      <a class="flex-1" href="/signin"><%= gettext("Sign in") %></a>
       <a class="opacity-75" href="/forgot"><%= gettext("Forgot email?") %></a>
     </div>
-    <%= form_for @changeset, Routes.user_path(@conn, :create), [class: "mt-6 w-full"], fn f -> %>
+    <%= form_for @changeset, Routes.session_path(@conn, :create), [class: "mt-6 w-full", data: [form: "signin"]], fn f -> %>
       <div class="<%= error_shake(@changeset) %>">
         <div class="bg-white p-2 pl-3 rounded">
           <div class="flex justify-between items-start">
@@ -46,7 +17,7 @@
           <%= text_input f, :email, class: "pb-1 w-full", autofocus: true, placeholder: "jane@smithco.com" %>
         </div>
 
-        <%= submit gettext("Sign Into Account"), class: "btn btn-gradient--dark" %>
+        <%= submit gettext("Sign Into Account"), class: "btn btn-gradient--dark mt-4 shadow hover:shadow-md" %>
       </div>
     <% end %>
   </div>

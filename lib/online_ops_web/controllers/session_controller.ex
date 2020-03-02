@@ -32,7 +32,7 @@ defmodule OnlineOpsWeb.SessionController do
     end
   end
 
-  def initiated(conn) do
+  def initiated(conn, _params) do
     render(conn, "magic.html")
   end
 
@@ -44,6 +44,12 @@ defmodule OnlineOpsWeb.SessionController do
       _ ->
         invalid_link(conn)
     end
+  end
+
+  def forgot(conn, _params) do
+    conn
+    |> assign(:changeset, Users.create_user_changeset())
+    |> render("forgot.html")
   end
 
   def destroy(conn, _params) do

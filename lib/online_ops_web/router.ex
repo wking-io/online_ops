@@ -54,6 +54,8 @@ defmodule OnlineOpsWeb.Router do
     post "/signin", SessionController, :create
     get "/signout", SessionController, :destroy
 
+    get "/forgot", SessionController, :forgot
+
     get "/magic/initiated", SessionController, :initiated
     get "/magic/:magic_token", SessionController, :callback
 

@@ -1,2 +1,8 @@
 @import "vendor/tailwind.css";
+@import "components/btn.css";
+@import "components/form.css";
 @import "utils/bg.css";
+
+.oo-input:focus-within {
+  @apply shadow-md;
+}

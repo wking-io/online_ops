@@ -1,0 +1,27 @@
+[data-form] {
+  @apply relative;
+}
+
+[data-form]:before {
+  @apply absolute h-0 w-0;
+  content: '';
+  border-top: theme('spacing.3') solid transparent;
+  border-right: theme('spacing.3') solid transparent;
+  border-bottom: theme('spacing.3') solid theme('colors.white');
+  border-left: theme('spacing.3') solid transparent;
+  top: 0;
+  transform: translateY(-100%);
+}
+
+[data-form="signup"]:before {
+  left: theme('spacing.3');
+}
+
+[data-form="signin"]:before {
+  left: theme('spacing.20');
+}
+
+[data-form="forgot"]:before {
+  left: auto;
+  right: theme('spacing.3');
+}

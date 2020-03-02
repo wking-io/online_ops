@@ -1,0 +1,24 @@
+<%= if get_flash(@conn, :error) do %>
+  <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
+<% end %>
+  <div class="mx-auto max-w-lg w-full mt-12">
+    <div class="flex items-baseline font-bold text-white">
+      <a class="opacity-75 mr-4" href="/signup"><%= gettext("Sign up") %></a>
+      <a class="opacity-75 flex-1" href="/signin"><%= gettext("Sign in") %></a>
+      <a class="" href="/forgot"><%= gettext("Forgot email?") %></a>
+    </div>
+    <%= form_for @changeset, Routes.session_path(@conn, :forgot), [class: "mt-6 w-full", data: [form: "forgot"]], fn f -> %>
+      <div class="<%= error_shake(@changeset) %>">
+        <div class="bg-white p-2 pl-3 rounded">
+          <div class="flex justify-between items-start">
+            <%= label f, :question, gettext("Security Question"), class: "text-sm text-grey-500 font-bold pb-2" %>
+            <%= error_tag f, :question, class: "text-sm border border-error text-error rounded leading-none p-1" %>
+          </div>
+          <%= text_input f, :question, class: "pb-1 w-full", autofocus: true, placeholder: "Put your answer here..." %>
+        </div>
+
+        <%= submit gettext("Recover"), class: "btn btn-gradient--dark mt-4 shadow hover:shadow-md" %>
+      </div>
+    <% end %>
+  </div>
+</div>

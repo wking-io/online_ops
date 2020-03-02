@@ -1,0 +1,19 @@
+.btn {
+  @apply block py-3 px-8 bg-black rounded text-white w-full uppercase font-semibold;
+}
+
+.btn:hover {
+  @apply bg-grey-900;
+}
+
+.btn-lg {
+  @apply py-4 px-12;
+}
+
+.btn-gradient--dark {
+  background-image: linear-gradient(to right, theme('colors.brand.400'), theme('colors.brand.300'));
+}
+
+.btn-gradient--dark:hover {
+  background-image: linear-gradient(to right, theme('colors.brand.400') 40%, theme('colors.brand.300'));
+}
