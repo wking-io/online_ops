@@ -16,3 +16,6 @@ config :online_ops, OnlineOpsWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :online_ops, OnlineOps.Mailer,
+  adapter: Bamboo.TestAdapter

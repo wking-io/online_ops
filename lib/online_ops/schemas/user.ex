@@ -3,7 +3,7 @@ defmodule OnlineOps.Schemas.User do
   import Ecto.Changeset
 
   @type t :: %__MODULE__{}
-  
+
   schema "users" do
     field :email, :string
     field :first_name, :string
@@ -18,6 +18,6 @@ defmodule OnlineOps.Schemas.User do
     |> cast(attrs, [:first_name, :last_name, :email])
     |> validate_required([:first_name, :last_name, :email])
     |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email, name: :users_email_index)
+    |> unique_constraint(:email, name: :users_email_index, message: "already taken")
   end
 end

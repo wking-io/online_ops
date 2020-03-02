@@ -22,8 +22,8 @@ defmodule OnlineOpsWeb.UserController do
     case Users.create_user(user) do
       {:ok, user} ->
         {:ok, _} = Users.send_magic_link(user)
-        render(conn, "magic.html")
-        
+        redirect(conn, to: Routes.session_path(conn, :initiated))
+
       {:error, changeset} ->
         conn
         |> assign(:changeset, changeset)

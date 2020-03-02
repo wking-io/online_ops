@@ -23,13 +23,17 @@ defmodule OnlineOpsWeb.SessionController do
     case Users.get_by_email(email) do
       {:ok, user} ->
         {:ok, _} = Users.send_magic_link(user)
-        render(conn, "magic.html")
-        
+        redirect(conn, to: Routes.session_path(conn, :initiated))
+
       {:error, changeset} ->
         conn
         |> assign(:changeset, changeset)
         |> render("new.html")
     end
+  end
+
+  def initiated(conn) do
+    render(conn, "magic.html")
   end
 
   def callback(conn, %{"magic_token" => magic_token}) do

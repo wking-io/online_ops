@@ -17,7 +17,7 @@ defmodule OnlineOpsWeb.Router do
     plug :put_secure_browser_headers
     plug :maybe_auth
   end
-  
+
   pipeline :ensure_auth do
     plug Guardian.Plug.EnsureAuthenticated
     plug :ensure_user
@@ -52,8 +52,11 @@ defmodule OnlineOpsWeb.Router do
 
     get "/signin", SessionController, :new
     post "/signin", SessionController, :create
-    get "/signin/:magic_token", SessionController, :callback
     get "/signout", SessionController, :destroy
+
+    get "/magic/initiated", SessionController, :initiated
+    get "/magic/:magic_token", SessionController, :callback
+
   end
 
   scope "/", OnlineOpsWeb do
