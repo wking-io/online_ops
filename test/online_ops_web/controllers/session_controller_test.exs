@@ -104,5 +104,14 @@ defmodule OnlineOpsWeb.SessionControllerTest do
       user = Guardian.Plug.current_resource(conn)
       assert user.email === email
     end
+
+    test "invalid token redirects to the sign in form", %{conn: conn} do
+      result =
+        conn
+        |> get("/magic/faketoken")
+        |> redirected_to(302)
+
+      assert result =~ "/signin"
+    end
   end
 end
