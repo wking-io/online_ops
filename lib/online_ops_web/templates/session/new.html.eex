@@ -1,7 +1,7 @@
 <%= if get_flash(@conn, :error) do %>
   <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
 <% end %>
-  <div class="mx-auto max-w-lg w-full mt-12">
+  <div class="mx-auto max-w-lg w-4/5 mt-20">
     <div class="flex items-baseline font-bold text-white">
       <a class="opacity-75 mr-4" href="/signup"><%= gettext("Sign up") %></a>
       <a class="flex-1" href="/signin"><%= gettext("Sign in") %></a>
@@ -12,12 +12,12 @@
         <div class="bg-white p-2 pl-3 rounded">
           <div class="flex justify-between items-start">
             <%= label f, :email, gettext("Email address"), class: "text-sm text-grey-500 font-bold pb-2" %>
-            <%= error_tag f, :email, class: "text-sm border border-error text-error rounded leading-none p-1" %>
+            <%= error_tag f, :email, class: "text-sm border border-error text-error rounded leading-none p-1", data: [ "field-error": "email" ] %>
           </div>
           <%= text_input f, :email, class: "pb-1 w-full", autofocus: true, placeholder: "jane@smithco.com" %>
         </div>
 
-        <%= submit gettext("Sign Into Account"), class: "btn btn-gradient--dark mt-4 shadow hover:shadow-md" %>
+        <%= submit gettext("Sign Into Account"), class: "btn btn-lg btn-gradient--dark mt-4 shadow hover:shadow-md" %>
       </div>
     <% end %>
   </div>

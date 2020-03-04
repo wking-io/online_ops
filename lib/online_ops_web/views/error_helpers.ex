@@ -5,10 +5,13 @@ defmodule OnlineOpsWeb.ErrorHelpers do
 
   use Phoenix.HTML
 
+  require Logger
+
   @doc """
   Generates tag for inlined form input errors.
   """
   def error_tag(form, field, opts \\ %{}) do
+    Logger.info(inspect form)
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
       content_tag(:span, translate_error(error), opts)
     end)

@@ -43,6 +43,7 @@ defmodule OnlineOpsWeb do
       import OnlineOpsWeb.FormHelpers
       import OnlineOps.Gettext
       alias OnlineOpsWeb.Router.Helpers, as: Routes
+      require Logger
     end
   end
 

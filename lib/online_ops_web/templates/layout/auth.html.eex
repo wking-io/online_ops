@@ -40,8 +40,8 @@
   
   <body class="font-sans text-black bg-gradient--page">
     <main role="main" class="flex flex-col items-center justify-center h-full min-h-screen">
-      <a href="/" class="block">
-        <%= render OnlineOpsWeb.UIView, "logo-light.html", classes: "flex items-center font-extrabold text-4xl", height: "h-20", tag: :span %>
+      <a href="/" class="block -mt-20">
+        <%= render OnlineOpsWeb.UIView, "logo-light.html", classes: "flex items-center font-extrabold text-3xl md:text-4xl", height: "h-16 md:h-20", tag: :span %>
       </a>
       <%= render @view_module, @view_template, assigns %>
     </main>

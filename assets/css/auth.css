@@ -1,6 +1,7 @@
-@import "vendor/tailwind.css";
+@import "tailwindcss/base.css";
 @import "components/btn.css";
 @import "components/form.css";
+@import "tailwindcss/utilities.css";
 @import "utils/bg.css";
 
 .oo-input:focus-within {

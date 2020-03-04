@@ -52,7 +52,7 @@ defmodule OnlineOpsWeb.UserControllerTest do
       assert is_nil(conn.assigns[:current_user])
     end
 
-    test "redirects to page xplaining magic link was senr to their email", %{conn: conn} do
+    test "redirects to page explaining magic link was sent to their email", %{conn: conn} do
       assert redirected_to(conn, 302) =~ "/magic"
     end
 

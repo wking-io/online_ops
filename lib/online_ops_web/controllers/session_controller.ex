@@ -5,6 +5,8 @@ defmodule OnlineOpsWeb.SessionController do
   alias OnlineOps.Schemas.User
   alias OnlineOps.Guardian
 
+  require Logger
+
   def new(conn, _params) do
     case conn.assigns[:current_user] do
       %User{} ->
@@ -12,10 +14,7 @@ defmodule OnlineOpsWeb.SessionController do
         |> redirect(to: Routes.app_path(conn, :index))
 
       _ ->
-        conn
-        |> assign(:changeset, Users.create_user_changeset())
-        |> assign(:page_title, "Sign in to OnlineOps")
-        |> render("new.html")
+        render_sign_in(conn)
     end
   end
 
@@ -25,10 +24,11 @@ defmodule OnlineOpsWeb.SessionController do
         {:ok, _} = Users.send_magic_link(user)
         redirect(conn, to: Routes.session_path(conn, :initiated))
 
-      {:error, changeset} ->
-        conn
-        |> assign(:changeset, changeset)
-        |> render("new.html")
+      {:error, %{valid?: false} = changeset} ->
+        render_sign_in(conn, changeset)
+
+      {:error, _} ->
+        redirect(conn, to: Routes.session_path(conn, :initiated))
     end
   end
 
@@ -75,5 +75,19 @@ defmodule OnlineOpsWeb.SessionController do
     conn
         |> put_flash(:error, "Invalid magic link.")
         |> redirect(to: Routes.session_path(conn, :new))
+  end
+
+  defp render_sign_in(conn) do
+    conn
+    |> assign(:changeset, Users.get_user_changeset())
+    |> assign(:page_title, "Sign in to OnlineOps")
+    |> render("new.html")
+  end
+
+  defp render_sign_in(conn, changeset) do
+    conn
+    |> assign(:changeset, %{changeset | action: :validate})
+    |> assign(:page_title, "Sign in to OnlineOps")
+    |> render("new.html")
   end
 end

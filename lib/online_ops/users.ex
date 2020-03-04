@@ -2,7 +2,7 @@ defmodule OnlineOps.Users do
   @moduledoc """
   The Users context.
   """
-  
+
   import OnlineOps.Gettext
 
   alias OnlineOps.Email
@@ -25,13 +25,13 @@ defmodule OnlineOps.Users do
   end
 
   def get_by_email(email) do
-    case Repo.get_by(User, email: email) do
-      %User{} = user ->
-        {:ok, user}
-        
-      _ ->
-        {:error, dgettext("errors", "User not found")}
-    end
+    get_user_changeset(%{email: email})
+    |> get_if_valid()
+
+  end
+
+  def get_user_changeset(attrs \\ %{}) do
+    User.get_changeset(%User{}, attrs)
   end
 
   def create_user(attrs \\ %{}) do
@@ -40,7 +40,7 @@ defmodule OnlineOps.Users do
   end
 
   def create_user_changeset(attrs \\ %{}) do
-    User.changeset(%User{}, attrs)
+    User.create_changeset(%User{}, attrs)
   end
 
   def send_magic_link(%User{} = user) do
@@ -50,5 +50,13 @@ defmodule OnlineOps.Users do
     |> Mailer.deliver_now()
 
     {:ok, magic_token}
+  end
+
+  defp get_if_valid(%{valid?: false} = changeset) do
+    {:error, changeset}
+  end
+
+  defp get_if_valid(changeset) do
+    Repo.get_by(User, changeset)
   end
 end

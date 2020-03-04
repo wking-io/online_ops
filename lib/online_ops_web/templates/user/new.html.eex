@@ -1,7 +1,7 @@
 <%= if get_flash(@conn, :error) do %>
   <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
 <% end %>
-  <div class="mx-auto max-w-lg w-full mt-12">
+  <div class="mx-auto max-w-lg w-4/5 mt-20">
     <div class="flex items-baseline font-bold text-white">
       <a class="mr-4" href="/signup">Sign up</a>
       <a class="opacity-75 flex-1" href="/signin">Sign in</a>
