@@ -30,7 +30,7 @@ defmodule OnlineOpsWeb.UserControllerTest do
 
   describe "POST /signup" do
     setup %{conn: conn} do
-      params = params_for(:user, %{ email: "test@test.com", last_name: "King" })
+      params = params_for(:user, %{ email: "test+user@test.com", last_name: "King" })
 
       conn =
         conn
@@ -56,9 +56,7 @@ defmodule OnlineOpsWeb.UserControllerTest do
       assert redirected_to(conn, 302) =~ "/magic"
     end
 
-    test "renders warning with redirect to /signin when using email that is already in use", %{conn: conn} do
-      params = params_for(:user, %{ email: "test@test.com" })
-
+    test "renders warning with redirect to /signin when using email that is already in use", %{conn: conn, params: params} do
       body =
         conn
         |> post("/signup", %{"user" => params})

@@ -11,6 +11,8 @@ defmodule OnlineOps.Users do
   alias OnlineOps.Repo
   alias OnlineOps.Schemas.User
 
+  require Logger
+
   @doc """
   Fetches a user by id.
   """
@@ -27,7 +29,6 @@ defmodule OnlineOps.Users do
   def get_by_email(email) do
     get_user_changeset(%{email: email})
     |> get_if_valid()
-
   end
 
   def get_user_changeset(attrs \\ %{}) do
@@ -57,6 +58,12 @@ defmodule OnlineOps.Users do
   end
 
   defp get_if_valid(changeset) do
-    Repo.get_by(User, changeset)
+    case Repo.get_by(User, changeset.changes) do
+      nil ->
+        {:error, dgettext("errors", "User not found")}
+
+      user ->
+        {:ok, user}
+    end
   end
 end

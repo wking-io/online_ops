@@ -17,7 +17,7 @@
           <%= text_input f, :email, class: "pb-1 w-full", autofocus: true, placeholder: "jane@smithco.com" %>
         </div>
 
-        <%= submit gettext("Sign Into Account"), class: "btn btn-lg btn-gradient--dark mt-4 shadow hover:shadow-md" %>
+        <%= submit gettext("Sign Into Account"), class: "btn btn-lg btn-gradient--dark mt-4 shadow hover:shadow-md", data: [submit: "signin"] %>
       </div>
     <% end %>
   </div>

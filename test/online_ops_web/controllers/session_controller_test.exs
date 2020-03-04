@@ -3,14 +3,14 @@ defmodule OnlineOpsWeb.SessionControllerTest do
 
   import OnlineOps.Factory
 
-  alias OnlineOps.Users
   alias OnlineOps.Guardian
+  # alias OnlineOps.Users
 
   describe "GET /signin" do
     test "renders the signin form", %{conn: conn} do
       body =
         conn
-        |> get("/signup")
+        |> get("/signin")
         |> html_response(200)
 
       assert body =~ "data-submit=\"signin\""
@@ -31,7 +31,7 @@ defmodule OnlineOpsWeb.SessionControllerTest do
 
   describe "POST /signin" do
     setup %{conn: conn} do
-      email = %{email: "test@test.com"}
+      email = %{email: "test+session@test.com"}
       insert(:user, email)
 
       conn =
@@ -51,7 +51,7 @@ defmodule OnlineOpsWeb.SessionControllerTest do
     test "redirects to page explaining magic link was sent even if user was not found", %{conn: conn} do
       conn =
         conn
-        |> post("/signup", %{"user" => %{email: "invalid"}})
+        |> post("/signin", %{"user" => %{email: "test+sessionnew@test.com"}})
 
       assert redirected_to(conn, 302) =~ "/magic"
     end
@@ -61,7 +61,7 @@ defmodule OnlineOpsWeb.SessionControllerTest do
 
       body =
         conn
-        |> post("/signup", %{"user" => params})
+        |> post("/signin", %{"user" => params})
         |> html_response(200)
 
       assert body =~ "data-field-error=\"email\""
@@ -72,7 +72,7 @@ defmodule OnlineOpsWeb.SessionControllerTest do
 
       body =
         conn
-        |> post("/signup", %{"user" => params})
+        |> post("/signin", %{"user" => params})
         |> html_response(200)
 
       assert body =~ "data-field-error=\"email\""
@@ -81,13 +81,28 @@ defmodule OnlineOpsWeb.SessionControllerTest do
 
   describe "GET /magic/:magic_token" do
     setup %{conn: conn} do
-      email = %{email: "test@test.com"}
-      insert(:user, email)
+      email = "test+token@test.com"
+      user = insert(:user, %{email: email})
+      {:ok, magic_token, _} = Guardian.encode_magic(user)
 
       conn =
         conn
-        |> post("/signin", %{"user" => email})
-      {:ok, %{conn: conn, token: Guardian.Plug.current_token(conn), email: email.email}}
+        |> get("/magic/#{magic_token}")
+
+      {:ok, %{conn: conn, email: email}}
+    end
+
+    test "redirects to dashboard", %{conn: conn} do
+      result =
+        conn
+        |> redirected_to(302)
+
+      assert result =~ "/app"
+    end
+
+    test "validate current user is expected user", %{conn: conn, email: email} do
+      user = Guardian.Plug.current_resource(conn)
+      assert user.email === email
     end
   end
 end
