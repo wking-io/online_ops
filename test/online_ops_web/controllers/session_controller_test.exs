@@ -56,8 +56,8 @@ defmodule OnlineOpsWeb.SessionControllerTest do
       assert redirected_to(conn, 302) =~ "/magic"
     end
 
-    test "renders validation errors when submitting invalid fields", %{conn: conn} do
-      params = params_for(:user, %{ email: "invalid", last_name: "" })
+    test "renders validation error when submitting empty email", %{conn: conn} do
+      params = params_for(:user, %{ email: "" })
 
       body =
         conn
@@ -65,7 +65,17 @@ defmodule OnlineOpsWeb.SessionControllerTest do
         |> html_response(200)
 
       assert body =~ "data-field-error=\"email\""
-      assert body =~ "data-field-error=\"last_name\""
+    end
+
+    test "renders validation error when submitting invalid email format", %{conn: conn} do
+      params = params_for(:user, %{ email: "invalid" })
+
+      body =
+        conn
+        |> post("/signup", %{"user" => params})
+        |> html_response(200)
+
+      assert body =~ "data-field-error=\"email\""
     end
   end
 
@@ -78,38 +88,6 @@ defmodule OnlineOpsWeb.SessionControllerTest do
         conn
         |> post("/signin", %{"user" => email})
       {:ok, %{conn: conn, token: Guardian.Plug.current_token(conn), email: email.email}}
-    end
-
-    test "user is not logged in yet", %{conn: conn} do
-      assert is_nil(conn.assigns[:current_user])
-    end
-
-    test "redirects to page explaining magic link was sent to their email", %{conn: conn} do
-      assert redirected_to(conn, 302) =~ "/magic"
-    end
-
-    test "renders warning with redirect to /signin when using email that is already in use", %{conn: conn} do
-      params = params_for(:user, %{ email: "test@test.com" })
-
-      body =
-        conn
-        |> post("/signup", %{"user" => params})
-        |> html_response(200)
-
-      assert body =~ "data-field-error=\"email\""
-      assert body =~ "already taken"
-    end
-
-    test "renders validation errors when submitting invalid fields", %{conn: conn} do
-      params = params_for(:user, %{ email: "invalid", last_name: "" })
-
-      body =
-        conn
-        |> post("/signup", %{"user" => params})
-        |> html_response(200)
-
-      assert body =~ "data-field-error=\"email\""
-      assert body =~ "data-field-error=\"last_name\""
     end
   end
 end
