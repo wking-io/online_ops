@@ -1,4 +1,4 @@
-defmodule OnlineOpsWeb.AppView do
+defmodule OnlineOpsWeb.SpacesView do
   use OnlineOpsWeb, :view
 
   def display_user(user) do

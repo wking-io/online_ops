@@ -3,7 +3,9 @@ content_tag(
   :svg,
   class: @classes,
   xmlns: "http://www.w3.org/2000/svg",
-  viewBox: "0 0 1000 1000"
+  viewBox: "0 0 1000 1000",
+  height: "48",
+  width: "48"
 ) do %>
   <defs>
     <linearGradient id="gradient-dark" y1="500" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
