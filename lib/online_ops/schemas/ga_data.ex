@@ -2,7 +2,7 @@ defmodule OnlineOps.Schemas.GaData do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias OnlineOps.Schema.Space
+  alias OnlineOps.Schemas.Space
 
   @type t :: %__MODULE__{}
 

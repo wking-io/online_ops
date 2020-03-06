@@ -1,0 +1,11 @@
+<%= if get_flash(@conn, :error) do %>
+  <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
+<% end %>
+
+<div class="container mx-auto">
+  <% if assigns[:spaces] do %>
+    <%= render(OnlineOpsWeb.SpacesView, "space-item.html", spaces: @spaces) %>
+  <% else %>
+    <%= link("Create Your First Space", to: Routes.spaces_url(OnlineOpsWeb.Endpoint, :new), class: "btn btn-lg btn-gradient--dark mt-4 shadow hover:shadow-md", data: [action: "first-space"]) %>
+  <% end %>
+</div>

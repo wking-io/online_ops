@@ -4,13 +4,13 @@ defmodule OnlineOpsWeb.SpacesController do
   alias OnlineOps.Spaces
 
   def index(conn, _params) do
-    case Spaces.get_all(conn.assigns[:current_user]) do
+    case Spaces.get_all(conn.assigns[:current_user_id]) do
       {:ok, spaces} ->
         conn
-        |> assigns(:spaces, spaces)
+        |> assign(:spaces, spaces)
         |> render("index.html")
 
-      {:error, _} ->
+      {:error, :not_found} ->
         conn
         |> render("index.html")
     end
@@ -27,10 +27,10 @@ defmodule OnlineOpsWeb.SpacesController do
   end
 
   def show(conn, %{"id" => id}) do
-    with
+    with(
       {:ok, space} <- Spaces.get_by_id(id),
-      {:ok, space_user} <- Spaces.get_user(conn.assign[:current_user])
-    do
+      {:ok, space_user} <- Spaces.get_user(id, conn.assigns[:current_user_id])
+    ) do
       conn
         |> assign(:space, space)
         |> assign(:current_space_user, space_user)

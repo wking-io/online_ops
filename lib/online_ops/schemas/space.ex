@@ -2,8 +2,8 @@ defmodule OnlineOps.Schemas.Space do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias OnlineOps.Schema.SpaceUser
-  alias OnlineOps.Schema.GaData
+  alias OnlineOps.Schemas.SpaceUser
+  alias OnlineOps.Schemas.GaData
 
   @type t :: %__MODULE__{}
 

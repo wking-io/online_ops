@@ -4,7 +4,7 @@ defmodule OnlineOpsWeb.Plug.Session do
 
   import Phoenix.Controller, only: [redirect: 2]
   import Plug.Conn, only: [assign: 3]
-  
+
   def ensure_user(%{assigns: %{current_user: %User{}}} = conn, _opts) do
     conn
   end
@@ -14,6 +14,7 @@ defmodule OnlineOpsWeb.Plug.Session do
       %User{} = user ->
         conn
         |> assign(:current_user, user)
+        |> assign(:current_user_id, user.id)
 
       _ ->
         conn
