@@ -11,7 +11,7 @@ defmodule OnlineOpsWeb.SessionController do
     case conn.assigns[:current_user] do
       %User{} ->
         conn
-        |> redirect(to: Routes.app_path(conn, :index))
+        |> redirect(to: Routes.spaces_path(conn, :index))
 
       _ ->
         render_sign_in(conn)
@@ -68,7 +68,7 @@ defmodule OnlineOpsWeb.SessionController do
   defp sign_in(conn, user) do
     conn
         |> Guardian.Plug.sign_in(user)
-        |> redirect(to: Routes.app_path(conn, :index))
+        |> redirect(to: Routes.spaces_path(conn, :index))
   end
 
   defp invalid_link(conn) do

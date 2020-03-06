@@ -4,10 +4,10 @@ defmodule OnlineOps.Repo.Migrations.CreateSpaceUsers do
   def up do
     execute("CREATE TYPE space_user_role AS ENUM ('OWNER','ADMIN','MEMBER','VIEWER')")
 
-    create table(:space_users, primary_key: false) do
+    create table(:space_users) do
       add :role, :space_user_role, null: false, default: "MEMBER"
-      add :space_id, references(:spaces, on_delete: :nothing, type: :binary_id), null: false
-      add :user_id, references(:users, on_delete: :nothing, type: :binary_id), null: false
+      add :space_id, references(:spaces, on_delete: :nothing), null: false
+      add :user_id, references(:users, on_delete: :nothing), null: false
 
       timestamps()
     end
@@ -18,6 +18,5 @@ defmodule OnlineOps.Repo.Migrations.CreateSpaceUsers do
   def down do
     drop table(:space_users)
     execute("DROP TYPE space_user_role")
-    execute("DROP TYPE space_user_state")
   end
 end

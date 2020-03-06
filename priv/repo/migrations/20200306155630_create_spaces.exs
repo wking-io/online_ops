@@ -6,8 +6,8 @@ defmodule OnlineOps.Repo.Migrations.CreateSpaces do
 
     create table(:spaces) do
       add :state, :space_state, null: false, default: "ACTIVE"
-      add :refresh_token, :string
-      add :name, :string
+      add :refresh_token, :string, null: false
+      add :name, :string, null: false
 
       timestamps()
     end

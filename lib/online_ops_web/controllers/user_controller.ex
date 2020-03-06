@@ -8,7 +8,7 @@ defmodule OnlineOpsWeb.UserController do
     case conn.assigns[:current_user] do
       %User{} ->
         conn
-        |> redirect(to: Routes.app_path(conn, :index))
+        |> redirect(to: Routes.spaces_path(conn, :index))
 
       _ ->
         conn
