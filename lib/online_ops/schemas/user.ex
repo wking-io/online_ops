@@ -2,12 +2,17 @@ defmodule OnlineOps.Schemas.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+
+  alias OnlineOps.Schema.SpaceUser
+
   @type t :: %__MODULE__{}
 
   schema "users" do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
+
+    has_many :space_users, SpaceUser
 
     timestamps()
   end

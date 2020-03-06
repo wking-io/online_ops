@@ -70,7 +70,7 @@ defmodule OnlineOpsWeb.Router do
   scope "/app", OnlineOpsWeb do
     pipe_through [:authenticated_browser, :app_layout]
 
-    get "/", AppController, :index
+    resources "/spaces", SpacesController
   end
 
   scope "/auth", OnlineOpsWeb do

@@ -5,112 +5,86 @@ defmodule OnlineOpsWeb.SessionControllerTest do
 
   alias OnlineOps.Guardian
 
-  describe "GET /signin" do
-    test "renders the signin form", %{conn: conn} do
+  describe "GET /spaces" do
+
+    test "renders empty state if user does not have any spaces", %{conn: conn} do
       body =
         conn
-        |> get("/signin")
+        |> get("/app/spaces")
         |> html_response(200)
 
-      assert body =~ "data-submit=\"signin\""
+      assert body =~ "data-action=\"first-space\""
     end
 
-    test "redirects to dashboard if already logged in", %{conn: conn} do
-      user = insert(:user)
-
-      result =
+    test "renders all spaces", %{conn: conn} do
+      conn =
         conn
-        |> assign(:current_user, user)
-        |> get("/signin")
-        |> redirected_to(302)
+        |> get("/app/spaces")
 
-      assert result =~ "/app"
+      body = html_response(conn, 200)
+
+      assert Enum.empty?(conn.assigns[:spaces]) === false ""
+
+      conn.assigns[:spaces]
+      |> Enum.all?(fn space -> space_exists?(body, space) end)
+      |> assert
     end
   end
 
-  describe "POST /signin" do
-    setup %{conn: conn} do
-      email = %{email: "test+session@test.com"}
-      insert(:user, email)
+  describe "GET /new" do
 
-      conn =
-        conn
-        |> post("/signin", %{"user" => email})
-      {:ok, %{conn: conn, email: email}}
-    end
-
-    test "user is not logged in yet", %{conn: conn} do
-      assert is_nil(conn.assigns[:current_user])
-    end
-
-    test "redirects to page explaining magic link was sent to their email", %{conn: conn} do
-      assert redirected_to(conn, 302) =~ "/magic"
-    end
-
-    test "redirects to page explaining magic link was sent even if user was not found", %{conn: conn} do
-      conn =
-        conn
-        |> post("/signin", %{"user" => %{email: "test+sessionnew@test.com"}})
-
-      assert redirected_to(conn, 302) =~ "/magic"
-    end
-
-    test "renders validation error when submitting empty email", %{conn: conn} do
-      params = params_for(:user, %{ email: "" })
-
+    test "create space form is rendered in default state", %{conn: conn} do
       body =
         conn
-        |> post("/signin", %{"user" => params})
+        |> get("/new")
         |> html_response(200)
 
-      assert body =~ "data-field-error=\"email\""
+      assert body =~ "data-connected=\"false\""
+      assert body =~ "data-submit=\"new-space\""
     end
 
-    test "renders validation error when submitting invalid email format", %{conn: conn} do
-      params = params_for(:user, %{ email: "invalid" })
-
+    test "create space form updates when connected to google account", %{conn: conn} do
       body =
         conn
-        |> post("/signin", %{"user" => params})
+        |> assign(:access_token, "testing_access_token")
+        |> get("/new")
         |> html_response(200)
 
-      assert body =~ "data-field-error=\"email\""
+      assert body =~ "data-connected=\"true\""
+      assert body =~ "data-field=\"ga_property\""
+      assert body =~ "data-submit=\"new-space\""
+    end
+
+    test "create space form updates when user selects property", %{conn: conn} do
+      body =
+        conn
+        |> assign(:access_token, "testing_access_token")
+        |> get("/new")
+        |> html_response(200)
+
+      assert body =~ "data-connected=\"true\""
+      assert body =~ "data-field=\"ga_view\""
+      assert body =~ "data-submit=\"new-space\""
     end
   end
 
-  describe "GET /magic/:magic_token" do
-    setup %{conn: conn} do
-      email = "test+token@test.com"
-      user = insert(:user, %{email: email})
-      {:ok, magic_token, _} = Guardian.encode_magic(user)
+  describe "POST /spaces" do
 
-      conn =
-        conn
-        |> get("/magic/#{magic_token}")
-
-      {:ok, %{conn: conn, email: email}}
-    end
-
-    test "redirects to dashboard", %{conn: conn} do
+    test "redirects to new space if valid", %{conn: conn} do
       result =
         conn
         |> redirected_to(302)
 
-      assert result =~ "/app"
+      assert result =~ "/app/spaces/#{space_id}"
     end
 
-    test "validate current user is expected user", %{conn: conn, email: email} do
-      user = Guardian.Plug.current_resource(conn)
-      assert user.email === email
+    test "renders validation error when missing google account", %{conn: conn, email: email} do
     end
 
-    test "invalid token redirects to the sign in form", %{conn: conn} do
-      result =
-        conn
-        |> get("/magic/faketoken")
-        |> redirected_to(302)
+    test "renders validation error when missing google property", %{conn: conn} do
+    end
 
-      assert result =~ "/signin"
+    test "renders validation error when missing google view", %{conn: conn} do
     end
   end
 end
