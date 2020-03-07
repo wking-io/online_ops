@@ -9,6 +9,8 @@ defmodule OnlineOps.Schemas.Space do
 
   schema "spaces" do
     field :state, :string
+    field :property, :string
+    field :view, :string
     field :refresh_token, :string
     field :name, :string
 
@@ -21,7 +23,7 @@ defmodule OnlineOps.Schemas.Space do
   @doc false
   def create_changeset(user, attrs) do
     user
-    |> cast(attrs, [:state, :refresh_token, :name])
-    |> validate_required([:state, :refresh_token, :name])
+    |> cast(attrs, [:state, :property, :view, :refresh_token, :name])
+    |> validate_required([:state, :property, :view, :refresh_token, :name])
   end
 end

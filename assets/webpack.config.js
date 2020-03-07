@@ -132,16 +132,19 @@ module.exports = (_, { mode }) => {
             {
               test: /\.elm$/,
               exclude: [ /elm-stuff/, /node_modules/ ],
-              use: {
-                loader: 'elm-webpack-loader',
-                options: {
-                  cwd: paths.elm,
-                  pathToElm: paths.pathToElm,
-                  debug: !isProduction,
-                  verbose: !isProduction,
-                  optimize: isProduction,
+              use: [
+                { loader: 'elm-hot-webpack-loader' },
+                {
+                  loader: 'elm-webpack-loader',
+                  options: {
+                    cwd: paths.elm,
+                    pathToElm: paths.pathToElm,
+                    debug: !isProduction,
+                    verbose: !isProduction,
+                    optimize: isProduction,
+                  },
                 },
-              },
+              ],
             },
             {
               test: /\.(gif|png|jpe?g|svg)$/i,

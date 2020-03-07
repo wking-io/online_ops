@@ -2,6 +2,7 @@ defmodule OnlineOpsWeb.SpacesController do
   use OnlineOpsWeb, :controller
 
   alias OnlineOps.Spaces
+  alias OnlineOps.Spaces.Connect
 
   def index(conn, _params) do
     case Spaces.get_all(conn.assigns[:current_user_id]) do
@@ -23,7 +24,9 @@ defmodule OnlineOpsWeb.SpacesController do
 
   def new(conn, _params) do
     conn
-    |> render("index.html")
+    |> assign(:changeset, Connect.create_changeset())
+    |> assign(:state, Connect.init())
+    |> render("new.html")
   end
 
   def show(conn, %{"id" => id}) do

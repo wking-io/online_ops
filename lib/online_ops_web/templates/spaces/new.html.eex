@@ -1,0 +1,21 @@
+<%= if get_flash(@conn, :error) do %>
+  <div class="px-4 py-4 bg-red text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
+<% end %>
+  <div class="mx-auto max-w-lg w-4/5 mt-20">
+    <%= form_for @changeset, Routes.spaces_path(@conn, :create), [class: "mt-6 w-full", data: [form: "signin"]], fn f -> %>
+      <div class="<%= error_shake(@changeset) %>">
+        <div class="bg-white border border-grey-600 p-2 pl-3 rounded">
+          <div class="flex justify-between items-start">
+            <%= label f, :property, gettext("Analytics Property"), class: "text-sm text-grey-500 font-bold pb-2" %>
+          </div>
+          <%= if Connect.is?(@state, :connect_account) do %>
+            <%= text_input :placeholder, :property, class: "pb-1 w-full", placeholder: "Select your analytics property...", disabled: "true" %>
+          <% else %>
+            <%= select f, :property, Connect.get_properties(@state), class: "pb-1 w-full" %>
+        </div>
+
+        <%= submit gettext("Create Space"), class: "btn btn-lg btn-gradient--dark w-full mt-4 shadow hover:shadow-md", data: [submit: "create-space"], disabled: "true" %>
+      </div>
+    <% end %>
+  </div>
+</div>

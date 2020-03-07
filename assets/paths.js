@@ -23,5 +23,7 @@ module.exports = {
   images: resolveAsset('images'),
   eslint: resolveAsset('.eslintrc'),
   tailwind: resolveAsset('tailwind.config.js'),
-  content: [ resolveRoot('lib/online_ops_web/templates/**/*.html.eex'), resolveRoot('lib/online_ops_web/views/*.ex') ]
+  content: [ resolveRoot('lib/online_ops_web/templates/**/*.html.eex'), resolveRoot('lib/online_ops_web/views/*.ex') ],
+  elm: resolveAsset('elm'),
+  pathToElm: resolveAsset('node_modules/.bin/elm'),
 };
