@@ -3,5 +3,5 @@ defmodule Spaces.Connect do
   The module for managing the state of the form when creating a new space.
   """
 
-  @type step :: :connect_account | :choose_property | :choose_view
+  @type step :: :connect_account | :choose_property | :choose_view | :complete
 end

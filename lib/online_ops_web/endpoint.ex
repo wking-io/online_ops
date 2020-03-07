@@ -37,10 +37,13 @@ defmodule OnlineOpsWeb.Endpoint do
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
-  plug Plug.Session,
+  @session_options [
     store: :cookie,
     key: "_online_ops_key",
     signing_salt: "RtPKcpF9"
+  ]
+
+  plug Plug.Session, @session_options
 
   plug OnlineOpsWeb.Router
 end

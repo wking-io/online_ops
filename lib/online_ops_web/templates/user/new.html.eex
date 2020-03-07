@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <%= submit gettext("Get started"), class: "btn btn-lg btn-gradient--dark mt-4 shadow hover:shadow-md", data: [submit: "signup"] %>
+        <%= submit gettext("Get started"), class: "btn btn-lg btn-gradient--dark w-full mt-4 shadow hover:shadow-md", data: [submit: "signup"] %>
       </div>
     <% end %>
   </div>

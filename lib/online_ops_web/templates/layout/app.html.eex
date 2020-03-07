@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta name="csrf_token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
+    <%= csrf_meta_tag() %>
     <meta name="env" content="<%= Application.get_env(:online_ops, :env) %>">
 
     <%= if assigns[:module] do %>
@@ -27,7 +27,7 @@
     <meta property="og:url" content="<%= @og.url %>">
     <% end %>
 
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/#{asset_from_module(@view_module)}.css") %>"/>
 
     <link rel="apple-touch-icon" sizes="180x180" href="<%= Routes.static_url(@conn, "/favicon/apple-touch-icon.png") %>">
     <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_url(@conn, "/favicon/favicon-32x32.png") %>">
@@ -43,6 +43,6 @@
     <main role="main" class="container">
       <%= render @view_module, @view_template, assigns %>
     </main>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/#{asset_from_module(@view_module)}.js") %>"></script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 .btn {
-  @apply block py-3 px-8 bg-black rounded text-white w-full uppercase font-semibold;
+  @apply inline-block py-3 px-8 bg-black rounded text-white uppercase font-semibold;
 }
 
 .btn:hover {

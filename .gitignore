@@ -35,3 +35,6 @@ npm-debug.log
 
 # Ignore local env variables
 .env
+
+# Ignore Elixir language server folder
+/.elixir_ls/

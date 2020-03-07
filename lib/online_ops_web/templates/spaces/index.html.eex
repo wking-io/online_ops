@@ -2,10 +2,16 @@
   <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
 <% end %>
 
-<div class="container mx-auto">
-  <% if assigns[:spaces] do %>
+<%= if is_nil(assigns[:spaces]) do %>
+  <div class="min-h-screen flex flex-col items-center justify-center">
+    <div class="pt-24 pb-48 w-5/6 max-w-lg text-center">
+      <p class="font-bold">Thanks for joining! Looks like you don't have any spaces yet.</p>
+      <%= link("Create Your First Space", to: Routes.spaces_url(OnlineOpsWeb.Endpoint, :new), class: "btn btn-lg btn-gradient--dark mt-6 shadow hover:shadow-md", data: [action: "first-space"]) %>
+    </div>
+  </div>
+<% else %>
+  <div>
+    <h2>Your Spaces</h2>
     <%= render(OnlineOpsWeb.SpacesView, "space-item.html", spaces: @spaces) %>
-  <% else %>
-    <%= link("Create Your First Space", to: Routes.spaces_url(OnlineOpsWeb.Endpoint, :new), class: "btn btn-lg btn-gradient--dark mt-4 shadow hover:shadow-md", data: [action: "first-space"]) %>
-  <% end %>
-</div>
+  </div>
+<% end %>
