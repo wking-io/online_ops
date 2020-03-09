@@ -1,9 +1,9 @@
-defmodule Level.Loaders.Database do
+defmodule OnlineOps.Loaders.Database do
   @moduledoc false
 
   import Ecto.Query, warn: false
 
-  alias Level.Repo
+  alias OnlineOps.Repo
 
   # Suppress dialyzer warnings about dataloader functions
   @dialyzer {:nowarn_function, source: 1}

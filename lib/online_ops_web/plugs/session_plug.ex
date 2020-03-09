@@ -3,7 +3,7 @@ defmodule OnlineOpsWeb.Plug.Session do
   alias OnlineOps.Schemas.User
 
   import Phoenix.Controller, only: [redirect: 2]
-  import Plug.Conn, only: [assign: 3]
+  import Plug.Conn, only: [assign: 3, put_session: 3]
 
   def ensure_user(%{assigns: %{current_user: %User{}}} = conn, _opts) do
     conn

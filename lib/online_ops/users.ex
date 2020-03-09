@@ -14,6 +14,14 @@ defmodule OnlineOps.Users do
   require Logger
 
   @doc """
+  Fetches all spaces for a user.
+  """
+  @spec get_all() :: {:ok, [User.t()]} | {:error, :not_found}
+  def get_all() do
+    Repo.all(User)
+  end
+
+  @doc """
   Fetches a user by id.
   """
   def get_by_id(id) do

@@ -50,7 +50,9 @@ defmodule OnlineOps.MixProject do
       {:ex_machina, "~> 2.4", only: :test},
       {:absinthe, "~> 1.4"},
       {:absinthe_plug, "~>1.4"},
-      {:dataloader, "~> 1.0.0"}
+      {:dataloader, "~> 1.0.0"},
+      {:kronky, "~> 0.5.0"},
+      {:timex, "~> 3.0"}
     ]
   end
 
