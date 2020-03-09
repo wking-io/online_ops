@@ -47,7 +47,10 @@ defmodule OnlineOps.MixProject do
       {:guardian, "~> 2.0"},
       {:bamboo, "~> 1.4"},
       {:bamboo_postmark, "~> 0.6"},
-      {:ex_machina, "~> 2.4", only: :test}
+      {:ex_machina, "~> 2.4", only: :test},
+      {:absinthe, "~> 1.4"},
+      {:absinthe_plug, "~>1.4"},
+      {:dataloader, "~> 1.0.0"}
     ]
   end
 

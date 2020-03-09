@@ -14,7 +14,7 @@ defmodule OnlineOpsWeb.Plug.Session do
       %User{} = user ->
         conn
         |> assign(:current_user, user)
-        |> assign(:current_user_id, user.id)
+        |> put_session(:user_id, user.id)
 
       _ ->
         conn
