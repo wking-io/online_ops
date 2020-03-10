@@ -52,6 +52,13 @@ defmodule OnlineOps.Users do
     User.create_changeset(%User{}, attrs)
   end
 
+  def authorize_magic(magic_token) do
+    with {:ok, user, _claims} <- Guardian.decode_magic(magic_token)
+         {:ok, access_token, refresh_token} <- Guardian.exchange_magic(magic_token) do
+      {:ok, %{ user: user, access_token: access_token, refresh_token: refresh_token }}
+    end
+  end
+
   def send_magic_link(%User{} = user) do
     {:ok, magic_token, _claims} = Guardian.encode_magic(user)
 

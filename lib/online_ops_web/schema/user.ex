@@ -17,13 +17,31 @@ defmodule OnlineOpsWeb.Schema.User do
     field :updated_at, non_null(:timestamp)
   end
 
-  input_object :create_user_params do
+  object :user_profile do
     field :email, non_null(:string)
     field :first_name, non_null(:string)
     field :last_name, non_null(:string)
   end
 
   payload_object(:user_payload, :user)
+
+  input_object :create_user_params do
+    field :email, non_null(:string)
+    field :first_name, non_null(:string)
+    field :last_name, non_null(:string)
+  end
+
+  input_object :magic_token_params do
+    field :token, non_null(:string)
+  end
+
+  object :user_auth do
+    field :access_token, non_null(:string)
+    field :refresh_token, non_null(:string)
+    field :user, non_null(:user_profile)
+  end
+
+  payload_object(:user_auth_payload, :user_auth)
 
   object :user_queries do
     field :users, list_of(:user) do
@@ -33,8 +51,14 @@ defmodule OnlineOpsWeb.Schema.User do
 
   object :user_mutations do
     field :create_user, type: :user_payload do
-      arg :user, :create_user_params
+      arg :input, :create_user_params
       resolve &UserResolver.create/3
+      middleware &build_payload/2
+    end
+
+    field :authorize_user, type: :user_auth_payload do
+      arg :input, :magic_token_params
+      resolve &UserResolver.authorize/3
       middleware &build_payload/2
     end
   end
