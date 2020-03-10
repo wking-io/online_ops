@@ -1,4 +1,4 @@
-defmodule OnlineOpsWeb.Absinthe do
+defmodule OnlineOpsWeb.Plug.Absinthe do
   @moduledoc """
   A plug for establishing absinthe context.
   """
@@ -13,7 +13,7 @@ defmodule OnlineOpsWeb.Absinthe do
   Sets absinthe context on the given connection.
   """
   def put_absinthe_context(conn, _) do
-    current_user = conn.assigns[:current_user]
+    current_user = Guardian.Plug.current_resource(conn)
     Absinthe.Plug.put_options(conn, context: build_context(current_user))
   end
 

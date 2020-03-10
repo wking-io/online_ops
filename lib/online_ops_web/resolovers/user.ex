@@ -1,5 +1,6 @@
 defmodule OnlineOpsWeb.Resolvers.User do
   alias OnlineOps.Users
+  alias OnlineOps.Schemas.User
 
   alias Kronky.ValidationMessage
 

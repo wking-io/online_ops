@@ -8,6 +8,7 @@ defmodule OnlineOpsWeb.Router do
     plug Guardian.Plug.VerifySession
     plug Guardian.Plug.VerifyHeader
     plug Guardian.Plug.LoadResource, allow_blank: true
+    plug :put_absinthe_context
   end
 
   # pipeline :anonymous_browser do
@@ -19,10 +20,9 @@ defmodule OnlineOpsWeb.Router do
   #   plug :maybe_auth
   # end
 
-  # pipeline :ensure_auth do
-  #   plug Guardian.Plug.EnsureAuthenticated
-  #   plug :ensure_user
-  # end
+  pipeline :ensure_auth do
+    plug Guardian.Plug.EnsureAuthenticated
+  end
 
   # pipeline :authenticated_browser do
   #   plug :anonymous_browser
