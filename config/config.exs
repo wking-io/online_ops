@@ -42,5 +42,6 @@ config :online_ops, Google,
   secret_key: "YWkOrTiAUYKAdx6/9scP0wRGf99HLNG9k7DgdGjBD3dMowYJMBV4Btm7CMRvJk2z",
   token_ttl: %{
     "magic" => {30, :minutes},
-    "access" => {1, :days}
+    "access" => {1, :days},
+    "refresh" => {2, :weeks}
   }

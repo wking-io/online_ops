@@ -28,13 +28,13 @@ defmodule OnlineOps.Guardian do
   end
 
   def exchange_magic(magic_token) do
-    with {:ok, _, {access_token, _claims}} <- exchange(magic_token, @magic, @access)
-         {:ok, _, {refresh_token, _claims}} <- exhange(magic_token, @magic, @refresh) do
+    with {:ok, _, {access_token, _claims}} <- exchange(magic_token, @magic, @access),
+         {:ok, _, {refresh_token, _claims}} <- exchange(magic_token, @magic, @refresh) do
       {:ok, access_token, refresh_token}
     end
   end
 
-  def refresh(refresh_token) do
+  def refresh_access(refresh_token) do
     with {:ok, _, {token, _claims}} <- exchange(refresh_token, @refresh, @access) do
       {:ok, token}
     end
@@ -54,7 +54,7 @@ defmodule OnlineOps.Guardian do
         {:ok, user}
 
         _ ->
-          {:error, :not_found}
+          {:error, :resource_not_found}
     end
   end
 end

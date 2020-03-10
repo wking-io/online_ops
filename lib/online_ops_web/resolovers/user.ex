@@ -3,6 +3,8 @@ defmodule OnlineOpsWeb.Resolvers.User do
 
   alias Kronky.ValidationMessage
 
+  require Logger
+
   def list(_parent, _args, _resolution) do
     {:ok, Users.get_all()}
   end
@@ -11,7 +13,7 @@ defmodule OnlineOpsWeb.Resolvers.User do
     Users.get_by_id(id)
   end
 
-  def create(_parent, %{user: args}, _resolution) do
+  def create_user(_parent, %{input: args}, _resolution) do
     case Users.create_user(args) do
       {:ok, user} ->
         {:ok, _} = Users.send_magic_link(user)
@@ -22,25 +24,69 @@ defmodule OnlineOpsWeb.Resolvers.User do
     end
   end
 
-  def authorize(_parent, %{token: magic_token}, _resolution) do
+  def create_session(_parent, %{input: %{email: email}}, _resolution) do
+    case Users.get_by_email(email) do
+      {:ok, user} ->
+        {:ok, _} = Users.send_magic_link(user)
+        {:ok, user}
+
+      {:error, %{valid?: false} = changeset} ->
+        {:ok, changeset}
+
+      {:error, :resource_not_found} ->
+        {:ok, [%ValidationMessage{
+          code: :resource_not_found,
+          field: :email,
+          key: :email,
+          message: "No user found",
+        }]}
+    end
+  end
+
+  def authorize(_parent, %{input: magic_token}, _resolution) do
     case Users.authorize_magic(magic_token) do
       {:ok, user_auth } ->
         {:ok, user_auth}
 
       {:error, :invalid_token} ->
-        {:ok, %ValidationMessage{
+        {:ok, [%ValidationMessage{
           code: :invalid_token,
           field: :magic_token,
           key: :magic_token,
           message: "Invalid token",
-        }}
+        }]}
 
-      {:error, :not_found} ->
-        {:ok, %ValidationMessage{
-          code: :not_found,
+      {:error, :resource_not_found} ->
+        {:ok, [%ValidationMessage{
+          code: :resource_not_found,
           field: :magic_token,
           key: :magic_token,
           message: "Resource not found",
+        }]}
+
+      {:error, :secret_not_found} ->
+        {:ok, [%ValidationMessage{
+          code: :secret_not_found,
+          field: :magic_token,
+          key: :magic_token,
+          message: "Secret not found",
+        }]}
+
+      {:error, :no_token} ->
+        {:ok, [%ValidationMessage{
+          code: :no_token,
+          field: :magic_token,
+          key: :magic_token,
+          message: "Token was somehow missed",
+        }]}
+
+      {:error, error} ->
+        Logger.error(inspect error)
+        {:ok, %ValidationMessage{
+          code: :unknown,
+          field: :magic_token,
+          key: :magic_token,
+          message: "Unknown error check logs",
         }}
     end
   end

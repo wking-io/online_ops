@@ -1,9 +1,0 @@
-<%= if get_flash(@conn, :error) do %>
-  <div class="px-4 py-4 bg-red text-white text-center font-bold" role="alert"><%= get_flash(@conn, :error) %></div>
-<% end %>
-
-<div class="mt-16 text-white w-4/5 max-w-md mx-auto text-center">
-  <h2 class="font-bold text-xl md:text-2xl lg:text-3xl">Sign in link sent to your email</h2>
-  <p class="mt-4">If you do not get an email in the next 5 minutes than there may have been an issue on our end. Use the link below to get a new link.</p>
-  <a class="btn btn-gradient--dark mt-8 inline-block w-auto px-16 shadow hover:shadow-md" href="/signin" data-link="try-again">Try Again</a>
-</div>

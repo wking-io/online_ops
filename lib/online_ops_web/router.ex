@@ -1,14 +1,14 @@
 defmodule OnlineOpsWeb.Router do
   use OnlineOpsWeb, :router
 
-  # pipeline :maybe_auth do
-  #   plug Guardian.Plug.Pipeline,
-  #     module: OnlineOps.Guardian,
-  #     error_handler: OnlineOpsWeb.GuardianError.JSON
-  #   plug Guardian.Plug.VerifySession
-  #   plug Guardian.Plug.VerifyHeader
-  #   plug Guardian.Plug.LoadResource, allow_blank: true
-  # end
+  pipeline :maybe_auth do
+    plug Guardian.Plug.Pipeline,
+      module: OnlineOps.Guardian,
+      error_handler: OnlineOpsWeb.GuardianError.JSON
+    plug Guardian.Plug.VerifySession
+    plug Guardian.Plug.VerifyHeader
+    plug Guardian.Plug.LoadResource, allow_blank: true
+  end
 
   # pipeline :anonymous_browser do
   #   plug :accepts, ["html"]
@@ -31,6 +31,7 @@ defmodule OnlineOpsWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :maybe_auth
   end
 
   # scope "/" do

@@ -23,12 +23,16 @@ defmodule OnlineOpsWeb.Schema.User do
     field :last_name, non_null(:string)
   end
 
-  payload_object(:user_payload, :user)
+  payload_object(:user_payload, :user_profile)
 
   input_object :create_user_params do
     field :email, non_null(:string)
     field :first_name, non_null(:string)
     field :last_name, non_null(:string)
+  end
+
+  input_object :create_session_params do
+    field :email, non_null(:string)
   end
 
   input_object :magic_token_params do
@@ -52,7 +56,13 @@ defmodule OnlineOpsWeb.Schema.User do
   object :user_mutations do
     field :create_user, type: :user_payload do
       arg :input, :create_user_params
-      resolve &UserResolver.create/3
+      resolve &UserResolver.create_user/3
+      middleware &build_payload/2
+    end
+
+    field :create_session, type: :user_payload do
+      arg :input, :create_session_params
+      resolve &UserResolver.create_session/3
       middleware &build_payload/2
     end
 

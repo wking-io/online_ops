@@ -52,11 +52,15 @@ defmodule OnlineOps.Users do
     User.create_changeset(%User{}, attrs)
   end
 
-  def authorize_magic(magic_token) do
-    with {:ok, user, _claims} <- Guardian.decode_magic(magic_token)
+  def authorize_magic(%{ token: magic_token }) do
+    with {:ok, user, _claims} <- Guardian.decode_magic(magic_token),
          {:ok, access_token, refresh_token} <- Guardian.exchange_magic(magic_token) do
       {:ok, %{ user: user, access_token: access_token, refresh_token: refresh_token }}
     end
+  end
+
+  def authorize_magic(_) do
+    {:error, :no_token}
   end
 
   def send_magic_link(%User{} = user) do
@@ -75,7 +79,7 @@ defmodule OnlineOps.Users do
   defp get_if_valid(changeset) do
     case Repo.get_by(User, changeset.changes) do
       nil ->
-        {:error, dgettext("errors", "User not found")}
+        {:error, :resource_not_found}
 
       user ->
         {:ok, user}
