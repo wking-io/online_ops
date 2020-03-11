@@ -5,6 +5,9 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
 
   alias OnlineOps.Loaders
   alias OnlineOps.Schemas.User
+  import Plug.Conn
+
+  require Logger
 
   # Suppress dialyzer warnings about dataloader functions
   @dialyzer {:nowarn_function, build_loader: 1}
@@ -15,6 +18,21 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
   def put_absinthe_context(conn, _) do
     current_user = Guardian.Plug.current_resource(conn)
     Absinthe.Plug.put_options(conn, context: build_context(current_user))
+  end
+
+  @doc """
+  Sets the refresh cookie on the given connection
+  """
+  def put_refresh_cookie(conn, %Absinthe.Blueprint{} = blueprint) do
+    case blueprint.execution.context[:refresh_token] do
+      nil ->
+        conn
+
+      token ->
+        conn
+        |> fetch_session()
+        |> put_session(:refresh_token, token)
+    end
   end
 
   def build_context(%User{} = user) do

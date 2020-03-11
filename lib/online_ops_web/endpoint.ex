@@ -40,7 +40,9 @@ defmodule OnlineOpsWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_online_ops_key",
-    signing_salt: "RtPKcpF9"
+    signing_salt: "RtPKcpF9",
+    max_age: 60 * 60 * 24 * 15,
+    http_only: true
   ]
 
   plug Plug.Session, @session_options

@@ -46,7 +46,7 @@ defmodule OnlineOpsWeb.Resolvers.User do
 
   def authorize(_parent, %{input: magic_token}, _resolution) do
     case Users.authorize_magic(magic_token) do
-      {:ok, user_auth } ->
+      {:ok, user_auth} ->
         {:ok, user_auth}
 
       {:error, :invalid_token} ->

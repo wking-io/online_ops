@@ -54,13 +54,26 @@ defmodule OnlineOps.Users do
 
   def authorize_magic(%{ token: magic_token }) do
     with {:ok, user, _claims} <- Guardian.decode_magic(magic_token),
-         {:ok, access_token, refresh_token} <- Guardian.exchange_magic(magic_token) do
-      {:ok, %{ user: user, access_token: access_token, refresh_token: refresh_token }}
+         {:ok, access_token, refresh_token} <- Guardian.exchange_magic(magic_token),
+         {:ok, user_profile } <- get_profile(user) do
+      {:ok, %{ user: user_profile, access_token: access_token, refresh_token: refresh_token }}
     end
   end
 
   def authorize_magic(_) do
     {:error, :no_token}
+  end
+
+  def get_profile(%User{ email: email, first_name: first_name, last_name: last_name }) do
+    {:ok, %{
+      email: email,
+      first_name: first_name,
+      last_name: last_name
+    }}
+  end
+
+  def get_profile(_) do
+    {:error, :resource_not_found}
   end
 
   def send_magic_link(%User{} = user) do

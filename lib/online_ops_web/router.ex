@@ -5,7 +5,6 @@ defmodule OnlineOpsWeb.Router do
     plug Guardian.Plug.Pipeline,
       module: OnlineOps.Guardian,
       error_handler: OnlineOpsWeb.GuardianError.JSON
-    plug Guardian.Plug.VerifySession
     plug Guardian.Plug.VerifyHeader
     plug Guardian.Plug.LoadResource, allow_blank: true
     plug :put_absinthe_context
@@ -21,7 +20,7 @@ defmodule OnlineOpsWeb.Router do
   # end
 
   pipeline :ensure_auth do
-    plug Guardian.Plug.EnsureAuthenticated
+    plug Guardian.Plug.EnsureAuthenticated, claims: %{"typ" => "access"}
   end
 
   # pipeline :authenticated_browser do
@@ -66,7 +65,8 @@ defmodule OnlineOpsWeb.Router do
     pipe_through :api
 
     forward "/graphiql", Absinthe.Plug.GraphiQL,
-      schema: OnlineOpsWeb.Schema
+      schema: OnlineOpsWeb.Schema,
+      before_send: {OnlineOpsWeb.Plug.Absinthe, :put_refresh_cookie}
   end
 
   # scope "/auth", OnlineOpsWeb do

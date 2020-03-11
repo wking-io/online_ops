@@ -8,6 +8,8 @@ defmodule OnlineOpsWeb.Schema.User do
 
   alias OnlineOpsWeb.Resolvers.User, as: UserResolver
 
+  require Logger
+
   object :user do
     field :id, non_null(:id)
     field :email, non_null(:string)
@@ -41,16 +43,12 @@ defmodule OnlineOpsWeb.Schema.User do
 
   object :user_auth do
     field :access_token, non_null(:string)
-    field :refresh_token, non_null(:string)
     field :user, non_null(:user_profile)
   end
 
   payload_object(:user_auth_payload, :user_auth)
 
   object :user_queries do
-    field :users, list_of(:user) do
-      resolve &UserResolver.list/3
-    end
   end
 
   object :user_mutations do
@@ -69,6 +67,12 @@ defmodule OnlineOpsWeb.Schema.User do
     field :authorize_user, type: :user_auth_payload do
       arg :input, :magic_token_params
       resolve &UserResolver.authorize/3
+      middleware fn res, _ ->
+        %{ res |
+          context: Map.put(res.context, :refresh_token, res.value.refresh_token),
+          value: Map.delete(res.value, :refresh_token)
+        }
+      end
       middleware &build_payload/2
     end
   end
