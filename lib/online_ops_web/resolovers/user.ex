@@ -6,6 +6,14 @@ defmodule OnlineOpsWeb.Resolvers.User do
 
   require Logger
 
+  def viewer(_parent, _args, %{ context: %{ current_user: user }}) do
+    {:ok, user}
+  end
+
+  def viewer(_parent, _args, _resolution) do
+    {:error, "Viewer not found"}
+  end
+
   def list(_parent, _args, _resolution) do
     {:ok, Users.get_all()}
   end

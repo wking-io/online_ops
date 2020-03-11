@@ -49,6 +49,9 @@ defmodule OnlineOpsWeb.Schema.User do
   payload_object(:user_auth_payload, :user_auth)
 
   object :user_queries do
+    field :viewer, type: :user_payload do
+      resolve &UserResolver.viewer/3
+    end
   end
 
   object :user_mutations do

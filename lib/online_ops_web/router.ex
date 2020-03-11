@@ -30,6 +30,7 @@ defmodule OnlineOpsWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
     plug :maybe_auth
   end
 

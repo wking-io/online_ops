@@ -3,9 +3,11 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
   A plug for establishing absinthe context.
   """
 
-  alias OnlineOps.Loaders
+  # alias OnlineOps.Loaders
   alias OnlineOps.Schemas.User
-  import Plug.Conn
+  alias Guardian.Plug, as: GuardianBasePlug
+  alias OnlineOps.Guardian
+  alias Absinthe.Blueprint
 
   require Logger
 
@@ -16,33 +18,52 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
   Sets absinthe context on the given connection.
   """
   def put_absinthe_context(conn, _) do
-    current_user = Guardian.Plug.current_resource(conn)
-    Absinthe.Plug.put_options(conn, context: build_context(current_user))
+    context =
+      build_context()
+      |> maybe_user(conn)
+      |> maybe_refresh_token(conn)
+
+    Logger.info("Before: " <> inspect context)
+    Absinthe.Plug.put_options(conn, context: context)
   end
 
   @doc """
   Sets the refresh cookie on the given connection
   """
-  def put_refresh_cookie(conn, %Absinthe.Blueprint{} = blueprint) do
-    case blueprint.execution.context[:refresh_token] do
+  def put_refresh_cookie(conn, %Blueprint{ execution: %Blueprint.Execution{ context: context } }) do
+    case context[:refresh_token] do
       nil ->
         conn
 
       token ->
-        conn
-        |> fetch_session()
-        |> put_session(:refresh_token, token)
+        Guardian.Plug.put_session_token(conn, token, key: :refresh_token)
     end
   end
 
-  def build_context(%User{} = user) do
-    %{current_user: user, loader: build_loader(%{current_user: user})}
+  defp maybe_user(context, conn) do
+    case Guardian.Plug.current_resource(conn) do
+      %User{} = user ->
+        Map.put(context, :current_user, user)
+
+      _ ->
+        context
+    end
   end
 
-  def build_context(_), do: %{}
+  defp maybe_refresh_token(context, conn) do
+    case GuardianBasePlug.find_token_from_cookies(conn, key: :refresh_token) do
+      :no_token_found ->
+        context
 
-  defp build_loader(params) do
-    Dataloader.new()
-    |> Dataloader.add_source(:db, Loaders.database_source(params))
+      token ->
+        Map.put(context, :refresh_token, token)
+    end
   end
+
+  def build_context(), do: %{}
+
+  # defp build_loader(params) do
+  #   Dataloader.new()
+  #   |> Dataloader.add_source(:db, Loaders.database_source(params))
+  # end
 end
