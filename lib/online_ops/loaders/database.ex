@@ -4,6 +4,9 @@ defmodule OnlineOps.Loaders.Database do
   import Ecto.Query, warn: false
 
   alias OnlineOps.Repo
+  alias OnlineOps.Spaces
+  alias OnlineOps.Schemas.Space
+  alias OnlineOps.Schemas.SpaceUser
 
   # Suppress dialyzer warnings about dataloader functions
   @dialyzer {:nowarn_function, source: 1}
@@ -13,6 +16,11 @@ defmodule OnlineOps.Loaders.Database do
   end
 
   def source(_), do: raise("authentication required")
+
+  # Spaces
+
+  def query(Space, %{current_user: user}), do: Spaces.spaces_base_query(user)
+  def query(SpaceUser, %{current_user: user}), do: Spaces.space_users_base_query(user)
 
   # Fallback
 

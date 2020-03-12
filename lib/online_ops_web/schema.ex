@@ -3,14 +3,11 @@ defmodule OnlineOpsWeb.Schema do
 
   import_types OnlineOpsWeb.Schema.User
 
-  query do
-    @desc "The currently authenticated user."
-    field :viewer, :user do
-      resolve(fn _, %{context: %{current_user: current_user}} ->
-        {:ok, current_user}
-      end)
-    end
+  def plugins do
+    [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
+  end
 
+  query do
     import_fields :user_queries
   end
 

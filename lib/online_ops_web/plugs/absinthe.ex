@@ -3,11 +3,11 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
   A plug for establishing absinthe context.
   """
 
-  # alias OnlineOps.Loaders
+  import Plug.Conn
+  alias OnlineOps.Loaders
   alias OnlineOps.Schemas.User
   alias OnlineOps.Guardian
   alias Absinthe.Blueprint
-  import Plug.Conn
 
   require Logger
 
@@ -19,8 +19,9 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
   """
   def put_absinthe_context(conn, _) do
     context =
-      build_context()
+      %{}
       |> maybe_user(conn)
+      |> maybe_loader()
       |> maybe_refresh_token(conn)
 
     Absinthe.Plug.put_options(conn, context: context)
@@ -59,10 +60,16 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
     end
   end
 
-  def build_context(), do: %{}
+  defp maybe_loader(%{ current_user: user } = context) do
+    Map.put(context, :loader, build_loader(%{current_user: user}))
+  end
 
-  # defp build_loader(params) do
-  #   Dataloader.new()
-  #   |> Dataloader.add_source(:db, Loaders.database_source(params))
-  # end
+  defp maybe_loader(context) do
+    context
+  end
+
+  defp build_loader(params) do
+    Dataloader.new()
+    |> Dataloader.add_source(:db, Loaders.database_source(params))
+  end
 end

@@ -70,13 +70,11 @@ defmodule OnlineOps.Users do
 
   def authorize_refresh(refresh_token) do
     with {:ok, user, _claims} <- Guardian.decode_refresh(refresh_token),
-         {:ok, access_token, refresh_token} <- Guardian.exchange_magic(refresh_token),
+         {:ok, access_token, refresh_token} <- Guardian.exchange_refresh(refresh_token),
          {:ok, user_profile } <- get_profile(user) do
       {:ok, %{ user: user_profile, access_token: access_token, refresh_token: refresh_token }}
     end
   end
-
-
 
   def get_profile(%User{ email: email, first_name: first_name, last_name: last_name }) do
     {:ok, %{

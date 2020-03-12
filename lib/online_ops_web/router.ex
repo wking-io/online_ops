@@ -5,7 +5,7 @@ defmodule OnlineOpsWeb.Router do
     plug Guardian.Plug.Pipeline,
       module: OnlineOps.Guardian,
       error_handler: OnlineOpsWeb.GuardianError.JSON
-    plug Guardian.Plug.VerifyHeader, claims: %{typ: "access"}
+    plug Guardian.Plug.VerifyHeader, claims: %{typ: "access"}, halt: false
     plug Guardian.Plug.LoadResource, allow_blank: true
     plug :put_absinthe_context
   end

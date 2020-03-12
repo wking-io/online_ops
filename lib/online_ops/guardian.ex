@@ -44,6 +44,13 @@ defmodule OnlineOps.Guardian do
     end
   end
 
+  def exchange_refresh(refresh_token) do
+    with {:ok, _, {access_token, _claims}} <- exchange(refresh_token, @refresh, @access),
+         {:ok, _, {refreshed_token, _claims}} <- refresh(refresh_token) do
+      {:ok, access_token, refreshed_token}
+    end
+  end
+
   def refresh_access(refresh_token) do
     with {:ok, _, {token, _claims}} <- exchange(refresh_token, @refresh, @access) do
       {:ok, token}

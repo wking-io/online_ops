@@ -42,7 +42,7 @@ defmodule OnlineOps.Spaces do
   # BASE QUERIES
 
   @spec spaces_base_query(String.t()) :: Ecto.Query.t()
-  defp spaces_base_query(user_id) do
+  def spaces_base_query(user_id) do
     from s in Space,
       join: su in assoc(s, :space_users),
       where: s.state == "ACTIVE",
@@ -50,7 +50,7 @@ defmodule OnlineOps.Spaces do
   end
 
   @spec space_users_base_query(String.t(), String.t()) :: Ecto.Query.t()
-  defp space_users_base_query(space_id, user_id) do
+  def space_users_base_query(space_id, user_id) do
     from su in SpaceUser,
       distinct: su.id,
       join: s in assoc(su, :space),
