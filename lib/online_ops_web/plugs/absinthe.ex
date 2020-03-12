@@ -5,9 +5,9 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
 
   # alias OnlineOps.Loaders
   alias OnlineOps.Schemas.User
-  alias Guardian.Plug, as: GuardianBasePlug
   alias OnlineOps.Guardian
   alias Absinthe.Blueprint
+  import Plug.Conn
 
   require Logger
 
@@ -23,7 +23,6 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
       |> maybe_user(conn)
       |> maybe_refresh_token(conn)
 
-    Logger.info("Before: " <> inspect context)
     Absinthe.Plug.put_options(conn, context: context)
   end
 
@@ -36,7 +35,7 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
         conn
 
       token ->
-        Guardian.Plug.put_session_token(conn, token, key: :refresh_token)
+        put_session(conn, :refresh_token, token)
     end
   end
 
@@ -51,8 +50,8 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
   end
 
   defp maybe_refresh_token(context, conn) do
-    case GuardianBasePlug.find_token_from_cookies(conn, key: :refresh_token) do
-      :no_token_found ->
+    case get_session(conn, :refresh_token) do
+      nil ->
         context
 
       token ->

@@ -2,6 +2,7 @@ defmodule OnlineOpsWeb.Schema.User do
   @moduledoc false
 
   use Absinthe.Schema.Notation
+  alias OnlineOpsWeb.Middleware.CaptureRefresh
   import Kronky.Payload
   import_types Kronky.ValidationMessageTypes
   import_types OnlineOpsWeb.Schema.Scalars
@@ -51,6 +52,7 @@ defmodule OnlineOpsWeb.Schema.User do
   object :user_queries do
     field :viewer, type: :user_payload do
       resolve &UserResolver.viewer/3
+      middleware &build_payload/2
     end
   end
 
@@ -70,12 +72,13 @@ defmodule OnlineOpsWeb.Schema.User do
     field :authorize_user, type: :user_auth_payload do
       arg :input, :magic_token_params
       resolve &UserResolver.authorize/3
-      middleware fn res, _ ->
-        %{ res |
-          context: Map.put(res.context, :refresh_token, res.value.refresh_token),
-          value: Map.delete(res.value, :refresh_token)
-        }
-      end
+      middleware CaptureRefresh
+      middleware &build_payload/2
+    end
+
+    field :refresh_session, type: :user_auth_payload do
+      resolve &UserResolver.refresh/3
+      middleware CaptureRefresh
       middleware &build_payload/2
     end
   end

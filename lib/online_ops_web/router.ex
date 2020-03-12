@@ -5,7 +5,7 @@ defmodule OnlineOpsWeb.Router do
     plug Guardian.Plug.Pipeline,
       module: OnlineOps.Guardian,
       error_handler: OnlineOpsWeb.GuardianError.JSON
-    plug Guardian.Plug.VerifyHeader
+    plug Guardian.Plug.VerifyHeader, claims: %{typ: "access"}
     plug Guardian.Plug.LoadResource, allow_blank: true
     plug :put_absinthe_context
   end
@@ -19,9 +19,9 @@ defmodule OnlineOpsWeb.Router do
   #   plug :maybe_auth
   # end
 
-  pipeline :ensure_auth do
-    plug Guardian.Plug.EnsureAuthenticated, claims: %{"typ" => "access"}
-  end
+  # pipeline :ensure_auth do
+  #   plug Guardian.Plug.EnsureAuthenticated, claims: %{"typ" => "access"}
+  # end
 
   # pipeline :authenticated_browser do
   #   plug :anonymous_browser

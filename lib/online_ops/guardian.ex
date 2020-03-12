@@ -7,6 +7,8 @@ defmodule OnlineOps.Guardian do
 
   alias OnlineOps.Users
 
+  require Logger
+
   @magic "magic"
   @access "access"
   @refresh "refresh"
@@ -25,6 +27,14 @@ defmodule OnlineOps.Guardian do
 
   def decode_access(access_token, claims \\ %{}) do
     resource_from_token(access_token, claims, token_type: @access)
+  end
+
+  def encode_refresh(resource, claims \\ %{}) do
+    encode_and_sign(resource, claims, token_type: @refresh)
+  end
+
+  def decode_refresh(access_token, claims \\ %{}) do
+    resource_from_token(access_token, claims, token_type: @refresh)
   end
 
   def exchange_magic(magic_token) do
