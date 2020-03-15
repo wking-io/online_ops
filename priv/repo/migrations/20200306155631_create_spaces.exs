@@ -4,7 +4,8 @@ defmodule OnlineOps.Repo.Migrations.CreateSpaces do
   def up do
     execute("CREATE TYPE space_state AS ENUM ('ACTIVE','ARCHIVED')")
 
-    create table(:spaces) do
+    create table(:spaces, primary_key: false) do
+      add :id, :binary_id, primary_key: true
       add :state, :space_state, null: false, default: "ACTIVE"
       add :property, :string, null: false
       add :view, :string, null: false

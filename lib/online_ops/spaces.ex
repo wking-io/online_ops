@@ -39,6 +39,18 @@ defmodule OnlineOps.Spaces do
     |> get_response()
   end
 
+  @doc """
+  Creates a space
+  """
+  def create_space(attrs \\ %{}) do
+    create_space_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_space_changeset(attrs \\ %{}) do
+    Space.create_changeset(%Space{}, attrs)
+  end
+
   # BASE QUERIES
 
   @spec spaces_base_query(String.t()) :: Ecto.Query.t()
