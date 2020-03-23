@@ -11,6 +11,12 @@ defmodule OnlineOpsWeb.Schema.Space do
 
   require Logger
 
+  enum :space_step_result do
+    value :connect_account, as: "CONNECT_ACCOUNT"
+    value :connect_property, as: "CONNECT_PROPERTY"
+    value :connect_view, as: "CONNECT_VIEW"
+  end
+
   union :create_space_step do
     description "Input for the steps to create a space."
 
@@ -22,74 +28,44 @@ defmodule OnlineOpsWeb.Schema.Space do
     end
   end
 
-  object :user do
+  object :space do
     field :id, non_null(:id)
-    field :email, non_null(:string)
-    field :first_name, non_null(:string)
-    field :last_name, non_null(:string)
+    field :name, :string
     field :inserted_at, non_null(:timestamp)
     field :updated_at, non_null(:timestamp)
   end
 
-  object :user_profile do
-    field :email, non_null(:string)
-    field :first_name, non_null(:string)
-    field :last_name, non_null(:string)
+  payload_object(:space_payload, :space)
+
+  object :step_data do
+    field :data, :sapace_step_result
   end
 
-  payload_object(:user_payload, :user_profile)
+  payload_object(:step_payload, :step_data)
 
-  input_object :create_user_params do
-    field :email, non_null(:string)
-    field :first_name, non_null(:string)
-    field :last_name, non_null(:string)
+  input_object :space_setup_params do
+    field :step, non_null(:setup_step)
+    field :selection, :string
   end
 
-  input_object :create_session_params do
-    field :email, non_null(:string)
-  end
-
-  input_object :magic_token_params do
-    field :token, non_null(:string)
-  end
-
-  object :user_auth do
-    field :access_token, non_null(:string)
-    field :user, non_null(:user_profile)
-  end
-
-  payload_object(:user_auth_payload, :user_auth)
-
-  object :user_queries do
-    field :viewer, type: :user_payload do
-      resolve &UserResolver.viewer/3
+  object :space_queries do
+    field :space, :space_payload do
+      arg :id, non_null(:id)
+      resolve &SpaceResolver.space/3
       middleware &build_payload/2
     end
   end
 
-  object :user_mutations do
-    field :create_user, type: :user_payload do
-      arg :input, :create_user_params
-      resolve &UserResolver.create_user/3
+  object :space_mutations do
+    field :create_space, type: :space_payload do
+      resolve &SpaceResolver.create_space/3
       middleware &build_payload/2
     end
 
-    field :create_session, type: :user_payload do
-      arg :input, :create_session_params
-      resolve &UserResolver.create_session/3
-      middleware &build_payload/2
-    end
-
-    field :authorize_user, type: :user_auth_payload do
-      arg :input, :magic_token_params
-      resolve &UserResolver.authorize/3
-      middleware CaptureRefresh
-      middleware &build_payload/2
-    end
-
-    field :refresh_session, type: :user_auth_payload do
-      resolve &UserResolver.refresh/3
-      middleware CaptureRefresh
+    field :complete_setup_step, type: :setup_payload do
+      arg :id, non_null(:id)
+      arg :input, :space_setup_params
+      resolve &SpaceResolver.complete_setup_step/3
       middleware &build_payload/2
     end
   end
