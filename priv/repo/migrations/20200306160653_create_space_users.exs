@@ -13,6 +13,7 @@ defmodule OnlineOps.Repo.Migrations.CreateSpaceUsers do
       timestamps()
     end
 
+    create index(:space_users, [:id])
     create unique_index(:space_users, [:space_id, :user_id])
   end
 

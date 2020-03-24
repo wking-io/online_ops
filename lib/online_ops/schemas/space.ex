@@ -23,9 +23,14 @@ defmodule OnlineOps.Schemas.Space do
   end
 
   @doc false
-  def create_changeset(user, attrs) do
-    user
+  def create_changeset(space, attrs) do
+    space
     |> cast(attrs, [:state, :property, :view, :refresh_token, :name])
-    |> validate_required([:state, :property, :view, :refresh_token, :name])
+    |> validate_required([:state])
+  end
+
+  def update_changeset(space, attrs) do
+    space
+    |> cast(attrs, [:state, :property, :view, :refresh_token, :name])
   end
 end

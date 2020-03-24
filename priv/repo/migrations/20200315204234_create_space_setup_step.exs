@@ -14,6 +14,7 @@ defmodule OnlineOps.Repo.Migrations.CreateSpaceSetupStep do
       timestamps()
     end
 
+    create index(:space_setup_steps, [:id])
     create unique_index(:space_setup_steps, [:space_id, :state])
   end
 

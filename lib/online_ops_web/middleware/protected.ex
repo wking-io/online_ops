@@ -1,5 +1,6 @@
-defmodule Online_Ops_Web.Protected do
+defmodule OnlineOpsWeb.Middleware.Protected do
   @behaviour Absinthe.Middleware
+  alias Kronky.ValidationMessage
 
   def call(resolution, _config) do
     case resolution.context do

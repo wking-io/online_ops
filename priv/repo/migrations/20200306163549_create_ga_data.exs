@@ -10,11 +10,12 @@ defmodule OnlineOps.Repo.Migrations.CreateGaData do
       add :group, :ga_data_group, null: false
       add :type, :ga_data_type, null: false
       add :date, :naive_datetime, null: false
-      add :space_id, references(:spaces, on_delete: :nothing), null: false
+      add :space_id, references(:spaces, on_delete: :nothing, type: :binary_id), null: false
 
       timestamps()
     end
 
+    create index(:ga_data, [:id])
     create unique_index(:ga_data, [:space_id])
   end
 

@@ -6,6 +6,7 @@ defmodule OnlineOps.Spaces do
   import Ecto.Query
 
   alias OnlineOps.Repo
+  alias OnlineOps.Spaces.Connect
   alias OnlineOps.Schemas.Space
   alias OnlineOps.Schemas.SpaceUser
   alias OnlineOps.Schemas.User
@@ -14,7 +15,7 @@ defmodule OnlineOps.Spaces do
   Creates a space and space user.
   """
   @spec create(User.t()) :: {:ok, [Space.t()]} | {:error, Changeset.t()}
-  def create(%User{} = user, opt []) do
+  def create(%User{} = user, opts \\ []) do
     Space.create_changeset(%Space{}, opts)
     |> Repo.insert()
     |> after_create_space(user)
@@ -23,7 +24,7 @@ defmodule OnlineOps.Spaces do
   defp after_create_space({:ok, %Space{} = space}, %User{} = user) do
     case create_owner(user, space) do
       {:ok, owner} ->
-        {:ok, Map.merge(data, %{space_user: owner})}
+        {:ok, %{space: space, space_user: owner}}
 
       err ->
         err
@@ -46,12 +47,11 @@ defmodule OnlineOps.Spaces do
   @doc """
   Fetches all spaces for a user.
   """
-  @spec get_all(String.t()) :: {:ok, [Space.t()]} | {:error, :not_found}
-  def get_all(user_id) do
-    spaces_base_query(user_id)
-    |> order_by(asc: :name)
-    |> Repo.all()
-    |> get_response()
+  @spec get_all(User.t()) :: {:ok, [Space.t()]} | {:error, :resource_not_found}
+  def get_all(user) do
+    spaces_base_query(user)
+      |> order_by(asc: :name)
+      |> Repo.all()
   end
 
   @doc """
@@ -85,7 +85,68 @@ defmodule OnlineOps.Spaces do
     end
   end
 
+  @spec setup(String.t(), Connect.step_input(), String.t()) :: Connect.step_output()
+  def setup(%Space{} = space, {:connnect_account, _}, token) do
+    fetch_options(space, :property, token)
+  end
+
+  def setup(%Space{} = space, {:connnect_property, selection}, token) do
+    space
+    |> Space.update_changeset(%{property: selection})
+    |> Repo.update()
+    |> fetch_options(:views, token)
+  end
+
+  def setup(%Space{} = space, {:connnect_view, selection}, _token) do
+    space
+    |> Space.update_changeset(%{property: selection})
+    |> Repo.update()
+  end
+
+  defp fetch_options(%Space{} = space, :property, token) do
+    case Connect.fetch(:properties, space, token) do
+      {:ok, options} ->
+        %Connect.Account{id: space.id, options: options}
+
+      {:error, _} ->
+        {:error, :google_error}
+
+    end
+  end
+
+  defp fetch_options(%Space{} = space, :view, token) do
+    case Connect.fetch(:properties, space, token) do
+      {:ok, options} ->
+        %Connect.Property{id: space.id, options: options}
+
+      {:error, _} ->
+        {:error, :google_error}
+
+    end
+  end
+
+  # CONDITIONALS
+
+  @doc """
+  Determines if a user is allowed to update a space.
+  """
+  @spec can_update?(SpaceUser.t()) :: boolean()
+  def can_update?(%SpaceUser{role: role}) do
+    role == "OWNER" || role == "ADMIN"
+  end
+
   # BASE QUERIES
+
+  @doc """
+  Builds a query for listing spaces accessible by a given user.
+  """
+  @spec spaces_base_query(User.t()) :: Ecto.Query.t()
+  def spaces_base_query(user) do
+    from s in Space,
+      join: su in assoc(s, :space_users),
+      where: s.state == "ACTIVE",
+      where: su.user_id == ^user.id and su.state == "ACTIVE"
+  end
 
   @doc """
   Builds a query for listing space users related to the given resource.

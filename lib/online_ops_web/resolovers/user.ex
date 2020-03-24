@@ -92,7 +92,7 @@ defmodule OnlineOpsWeb.Resolvers.User do
           message: "Token was somehow missed",
         }}
 
-      {:error, error} ->
+      {:error, _} ->
         {:ok, %ValidationMessage{
           code: :unknown,
           field: :magic_token,

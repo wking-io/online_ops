@@ -1,3 +1,9 @@
 defmodule OnlineOps.Spaces.Connect.Property do
-  defstruct [:id, :property_id, :property_name]
+  @enforce_keys [:id, :options]
+  defstruct [:id, :options]
+
+  @type t :: %__MODULE__{
+    id: String.t(),
+    options: [{String.t, String.t}],
+  }
 end

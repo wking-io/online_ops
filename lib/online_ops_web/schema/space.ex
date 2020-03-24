@@ -16,8 +16,8 @@ defmodule OnlineOpsWeb.Schema.Space do
     value :connect_view, as: "CONNECT_VIEW"
   end
 
-  union :create_space_step do
-    description "Input for the steps to create a space."
+  union :step_data do
+    description "Result for the steps to create a space."
 
     types [:connect_account, :connect_property, :connect_view]
     resolve_types fn
@@ -36,10 +36,6 @@ defmodule OnlineOpsWeb.Schema.Space do
 
   payload_object(:space_payload, :space)
 
-  object :step_data do
-    field :data, :sapace_step_result
-  end
-
   payload_object(:step_payload, :step_data)
 
   input_object :space_setup_params do
@@ -48,6 +44,12 @@ defmodule OnlineOpsWeb.Schema.Space do
   end
 
   object :space_queries do
+    field :spaces, list_of(:space_payload) do
+      middleware Protected
+      resolve &SpaceResolver.space/3
+      middleware &build_payload/2
+    end
+
     field :space, :space_payload do
       arg :id, non_null(:id)
       middleware Protected
@@ -63,7 +65,7 @@ defmodule OnlineOpsWeb.Schema.Space do
       middleware &build_payload/2
     end
 
-    field :complete_setup_step, type: :setup_payload do
+    field :complete_setup_step, type: :step_payload do
       arg :id, non_null(:id)
       arg :input, :space_setup_params
       middleware Protected

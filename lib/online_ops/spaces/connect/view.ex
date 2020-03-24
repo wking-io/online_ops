@@ -1,3 +1,11 @@
 defmodule OnlineOps.Spaces.Connect.View do
-  defstruct [:id, :view_id, :view_name]
+  alias OnlineOps.Schemas.Space
+
+  @enforce_keys [:id, :space]
+  defstruct [:id, :space]
+
+  @type t :: %__MODULE__{
+    id: String.t(),
+    space: Space.t(),
+  }
 end

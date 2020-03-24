@@ -23,6 +23,7 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
       |> maybe_user(conn)
       |> maybe_loader()
       |> maybe_refresh_token(conn)
+      |> maybe_google_access_token(conn)
 
     Absinthe.Plug.put_options(conn, context: context)
   end
@@ -57,6 +58,16 @@ defmodule OnlineOpsWeb.Plug.Absinthe do
 
       token ->
         Map.put(context, :refresh_token, token)
+    end
+  end
+
+  defp maybe_google_access_token(context, conn) do
+    case get_session(conn, :google_access_token) do
+      nil ->
+        context
+
+      token ->
+        Map.put(context, :google_access_token, token)
     end
   end
 

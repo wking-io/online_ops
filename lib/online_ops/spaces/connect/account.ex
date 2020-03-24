@@ -1,3 +1,9 @@
 defmodule OnlineOps.Spaces.Connect.Account do
-  defstruct [:id, :access_token, :refresh_token]
+  @enforce_keys [:id, :options]
+  defstruct [:id, :options]
+
+  @type t :: %__MODULE__{
+    id: String.t(),
+    options: [{String.t, String.t}],
+  }
 end

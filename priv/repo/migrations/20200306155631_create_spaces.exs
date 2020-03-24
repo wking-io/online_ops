@@ -2,7 +2,7 @@ defmodule OnlineOps.Repo.Migrations.CreateSpaces do
   use Ecto.Migration
 
   def up do
-    execute("CREATE TYPE space_state AS ENUM ('ACTIVE','ARCHIVED')")
+    execute("CREATE TYPE space_state AS ENUM ('SETUP','ACTIVE','ARCHIVED')")
 
     create table(:spaces, primary_key: false) do
       add :id, :binary_id, primary_key: true
@@ -14,6 +14,8 @@ defmodule OnlineOps.Repo.Migrations.CreateSpaces do
 
       timestamps()
     end
+
+    create index(:spaces, [:id])
   end
 
   def down do
