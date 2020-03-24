@@ -11,8 +11,6 @@ defmodule OnlineOps.Users do
   alias OnlineOps.Repo
   alias OnlineOps.Schemas.User
 
-  require Logger
-
   @doc """
   Fetches all spaces for a user.
   """

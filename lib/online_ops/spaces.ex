@@ -8,6 +8,40 @@ defmodule OnlineOps.Spaces do
   alias OnlineOps.Repo
   alias OnlineOps.Schemas.Space
   alias OnlineOps.Schemas.SpaceUser
+  alias OnlineOps.Schemas.User
+
+  @doc """
+  Creates a space and space user.
+  """
+  @spec create(User.t()) :: {:ok, [Space.t()]} | {:error, Changeset.t()}
+  def create(%User{} = user, opt []) do
+    Space.create_changeset(%Space{}, opts)
+    |> Repo.insert()
+    |> after_create_space(user)
+  end
+
+  defp after_create_space({:ok, %Space{} = space}, %User{} = user) do
+    case create_owner(user, space) do
+      {:ok, owner} ->
+        {:ok, Map.merge(data, %{space_user: owner})}
+
+      err ->
+        err
+    end
+  end
+
+  defp after_create_space(err, _), do: err
+
+  defp create_owner(%User{} = user, %Space{} = space) do
+    params = %{
+      user_id: user.id,
+      space_id: space.id,
+      role: "OWNER"
+    }
+
+    SpaceUser.create_changeset(%SpaceUser{}, params)
+    |> Repo.insert()
+  end
 
   @doc """
   Fetches all spaces for a user.
@@ -23,73 +57,58 @@ defmodule OnlineOps.Spaces do
   @doc """
   Fetches a space by id.
   """
-  @spec get_by_id(String.t()) :: {:ok, Space.t()} | {:error, :not_found}
-  def get_by_id(id) do
-    Repo.get_by(Space, id: id, state: "ACTIVE")
-    |> get_response()
+  @spec get_by_id(User.t(), String.t()) :: {:ok, Space.t()} | {:error, :not_found}
+  def get_by_id(user, id) do
+    with %Space{} = space <- Repo.get_by(Space, id: id, state: "ACTIVE"),
+         {:ok, space_user} <- get_user(user, space) do
+      {:ok, %{space: space, space_user: space_user}}
+    else
+      _ ->
+          {:error, :resource_not_found}
+    end
   end
 
   @doc """
   Fetches a space user connected by space and current user.
   """
   @spec get_user(String.t(), String.t()) :: {:ok, SpaceUser.t()} | {:error, :not_authorized}
-  def get_user(space_id, user_id) do
-    space_users_base_query(space_id, user_id)
-    |> Repo.one()
-    |> get_response()
-  end
+  def get_user(%User{id: user_id} = user, %Space{ id: space_id}) do
+    query = space_users_base_query(user)
+    |> where([su], su.space_id == ^space_id and su.user_id == ^user_id)
 
-  @doc """
-  Creates a space
-  """
-  def create_space(attrs \\ %{}) do
-    create_space_changeset(attrs)
-    |> Repo.insert()
-  end
+    case Repo.one(query) do
+      %SpaceUser{} = space_user ->
+        {:ok, space_user}
 
-  def create_space_changeset(attrs \\ %{}) do
-    Space.create_changeset(%Space{}, attrs)
+      _ ->
+        {:error, :resource_not_found}
+    end
   end
 
   # BASE QUERIES
 
-  @spec spaces_base_query(String.t()) :: Ecto.Query.t()
-  def spaces_base_query(user_id) do
-    from s in Space,
-      join: su in assoc(s, :space_users),
-      where: s.state == "ACTIVE",
-      where: su.user_id == ^user_id
-  end
+  @doc """
+  Builds a query for listing space users related to the given resource.
+  """
+  @spec space_users_base_query(User.t()) :: Ecto.Query.t()
+  @spec space_users_base_query(Space.t()) :: Ecto.Query.t()
 
-  @spec space_users_base_query(String.t(), String.t()) :: Ecto.Query.t()
-  def space_users_base_query(space_id, user_id) do
+  def space_users_base_query(%User{} = user) do
     from su in SpaceUser,
       distinct: su.id,
       join: s in assoc(su, :space),
-      on: su.space_id == ^space_id and su.user_id == ^user_id,
+      join: usu in SpaceUser,
+      on: usu.space_id == su.space_id and usu.user_id == ^user.id,
       where: s.state == "ACTIVE",
-      where: su.state == "ACTIVE"
+      where: usu.state == "ACTIVE",
+      select: %{su | space_name: s.name}
   end
 
-  # RESPONSE HANDLERS
-
-  defp get_response(%Space{} = value) do
-    {:ok, value}
-  end
-
-  defp get_response(%SpaceUser{} = value) do
-    {:ok, value}
-  end
-
-  defp get_response(value) when is_list(value) do
-    if Enum.empty?(value) do
-      {:error, :not_found}
-    else
-      {:ok, value}
-    end
-  end
-
-  defp get_response(_) do
-    {:error, :not_found}
+  def space_users_base_query(%Space{id: space_id}) do
+    from su in SpaceUser,
+      join: s in assoc(su, :space),
+      where: s.state == "ACTIVE",
+      where: s.id == ^space_id,
+      select: %{su | space_name: s.name}
   end
 end

@@ -2,8 +2,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
   alias OnlineOps.Users
   alias Kronky.ValidationMessage
 
-  require Logger
-
   def viewer(_parent, _args, %{ context: %{ current_user: user }}) do
     case Users.get_profile(user) do
       {:ok, profile} ->
@@ -17,15 +15,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
           message: "No user found",
         }}
     end
-  end
-
-  def viewer(_parent, _args, _resolution) do
-    {:ok, %ValidationMessage{
-      code: :unauthorized,
-      field: :bearer,
-      key: :bearer,
-      message: "Invalid authorization token",
-    }}
   end
 
   def list(_parent, _args, _resolution) do
@@ -104,7 +93,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         }}
 
       {:error, error} ->
-        Logger.error(inspect error)
         {:ok, %ValidationMessage{
           code: :unknown,
           field: :magic_token,

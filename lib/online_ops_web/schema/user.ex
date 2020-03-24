@@ -2,7 +2,7 @@ defmodule OnlineOpsWeb.Schema.User do
   @moduledoc false
 
   use Absinthe.Schema.Notation
-  alias OnlineOpsWeb.Middleware.CaptureRefresh
+  alias OnlineOpsWeb.Middleware.{Protected, CaptureRefresh}
   import Kronky.Payload
   import_types Kronky.ValidationMessageTypes
   import_types OnlineOpsWeb.Schema.Scalars
@@ -51,6 +51,7 @@ defmodule OnlineOpsWeb.Schema.User do
 
   object :user_queries do
     field :viewer, type: :user_payload do
+      middleware Protected
       resolve &UserResolver.viewer/3
       middleware &build_payload/2
     end

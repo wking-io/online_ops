@@ -2,14 +2,13 @@ defmodule OnlineOpsWeb.Schema.Space do
   @moduledoc false
 
   use Absinthe.Schema.Notation
+  alias OnlineOpsWeb.Middleware.Protected
   import Kronky.Payload
   import_types Kronky.ValidationMessageTypes
   import_types OnlineOpsWeb.Schema.Scalars
 
   alias OnlineOps.Spaces.Connect
   alias OnlineOpsWeb.Resolvers.Space, as: SpaceResolver
-
-  require Logger
 
   enum :space_step_result do
     value :connect_account, as: "CONNECT_ACCOUNT"
@@ -51,6 +50,7 @@ defmodule OnlineOpsWeb.Schema.Space do
   object :space_queries do
     field :space, :space_payload do
       arg :id, non_null(:id)
+      middleware Protected
       resolve &SpaceResolver.space/3
       middleware &build_payload/2
     end
@@ -58,6 +58,7 @@ defmodule OnlineOpsWeb.Schema.Space do
 
   object :space_mutations do
     field :create_space, type: :space_payload do
+      middleware Protected
       resolve &SpaceResolver.create_space/3
       middleware &build_payload/2
     end
@@ -65,6 +66,7 @@ defmodule OnlineOpsWeb.Schema.Space do
     field :complete_setup_step, type: :setup_payload do
       arg :id, non_null(:id)
       arg :input, :space_setup_params
+      middleware Protected
       resolve &SpaceResolver.complete_setup_step/3
       middleware &build_payload/2
     end
