@@ -9,25 +9,26 @@ defmodule OnlineOps.Spaces do
   alias OnlineOps.Spaces.Connect
   alias OnlineOps.Schemas.Space
   alias OnlineOps.Schemas.SpaceUser
+  alias OnlineOps.Schemas.SpaceAuth
   alias OnlineOps.Schemas.User
 
   @doc """
   Creates a space and space user.
   """
-  @spec create(User.t()) :: {:ok, [Space.t()]} | {:error, Changeset.t()}
-  def create(%User{} = user, opts \\ []) do
+  @spec create(User.t()) :: {:ok, %{space: Space.t(), space_user: %SpaceUser{}, space_auth: %SpaceAuth{}}} | {:error, Changeset.t()}
+  def create(user, opts \\ []) do
     Space.create_changeset(%Space{}, opts)
     |> Repo.insert()
     |> after_create_space(user)
   end
 
   defp after_create_space({:ok, %Space{} = space}, %User{} = user) do
-    case create_owner(user, space) do
-      {:ok, owner} ->
-        {:ok, %{space: space, space_user: owner}}
-
+    with {:ok, owner} <- create_owner(user, space),
+         {:ok, auth} <- create_auth(space) do
+      {:ok, %{space: space, space_user: owner, space_auth: auth}}
+    else
       err ->
-        err
+        {:error, err}
     end
   end
 
@@ -41,6 +42,15 @@ defmodule OnlineOps.Spaces do
     }
 
     SpaceUser.create_changeset(%SpaceUser{}, params)
+    |> Repo.insert()
+  end
+
+  defp create_auth(%Space{} = space) do
+    params = %{
+      space_id: space.id,
+    }
+
+    SpaceAuth.create_changeset(%SpaceAuth{}, params)
     |> Repo.insert()
   end
 

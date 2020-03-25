@@ -19,8 +19,8 @@ defmodule OnlineOps.Schemas.SpaceUser do
   end
 
   @doc false
-  def create_changeset(user, attrs) do
-    user
+  def create_changeset(space_user, attrs) do
+    space_user
     |> cast(attrs, [:role, :space_id, :user_id])
     |> validate_required([:role, :space_id, :user_id])
   end

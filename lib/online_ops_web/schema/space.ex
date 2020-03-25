@@ -4,16 +4,33 @@ defmodule OnlineOpsWeb.Schema.Space do
   use Absinthe.Schema.Notation
   alias OnlineOpsWeb.Middleware.Protected
   import Kronky.Payload
-  import_types Kronky.ValidationMessageTypes
-  import_types OnlineOpsWeb.Schema.Scalars
 
   alias OnlineOps.Spaces.Connect
   alias OnlineOpsWeb.Resolvers.Space, as: SpaceResolver
 
-  enum :space_step_result do
+  enum :setup_step do
     value :connect_account, as: "CONNECT_ACCOUNT"
     value :connect_property, as: "CONNECT_PROPERTY"
     value :connect_view, as: "CONNECT_VIEW"
+  end
+
+  object :setup_option do
+    field :id, non_null(:id)
+    field :name, non_null(:string)
+  end
+
+  object :connect_account do
+    field :id, non_null(:id)
+    field :options, list_of(:setup_option)
+  end
+
+  object :connect_property do
+    field :id, non_null(:id)
+    field :options, list_of(:setup_option)
+  end
+
+  object :connect_view do
+    field :id, non_null(:id)
   end
 
   union :step_data do

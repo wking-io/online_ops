@@ -11,7 +11,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :resource_not_found,
           field: :viewer,
-          key: :viewer,
           message: "No user found",
         }}
     end
@@ -49,7 +48,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :resource_not_found,
           field: :email,
-          key: :email,
           message: "No user found",
         }}
     end
@@ -64,7 +62,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :invalid_token,
           field: :magic_token,
-          key: :magic_token,
           message: "Invalid token",
         }}
 
@@ -72,7 +69,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :resource_not_found,
           field: :magic_token,
-          key: :magic_token,
           message: "Resource not found",
         }}
 
@@ -80,7 +76,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :secret_not_found,
           field: :magic_token,
-          key: :magic_token,
           message: "Secret not found",
         }}
 
@@ -88,7 +83,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :no_token,
           field: :magic_token,
-          key: :magic_token,
           message: "Token was somehow missed",
         }}
 
@@ -96,7 +90,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :unknown,
           field: :magic_token,
-          key: :magic_token,
           message: "Unknown error check logs",
         }}
     end
@@ -111,7 +104,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :invalid_token,
           field: :refresh_token,
-          key: :refresh_token,
           message: "Invalid token",
         }}
 
@@ -119,7 +111,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :resource_not_found,
           field: :refresh_token,
-          key: :refresh_token,
           message: "Resource not found",
         }}
 
@@ -127,7 +118,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :secret_not_found,
           field: :refresh_token,
-          key: :refresh_token,
           message: "Secret not found",
         }}
 
@@ -135,7 +125,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :no_token,
           field: :refresh_token,
-          key: :refresh_token,
           message: "Token was somehow missed",
         }}
 
@@ -143,7 +132,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
         {:ok, %ValidationMessage{
           code: :unknown,
           field: :refresh_token,
-          key: :refresh_token,
           message: "Unknown error check logs",
         }}
     end
@@ -153,7 +141,6 @@ defmodule OnlineOpsWeb.Resolvers.User do
     {:ok, %ValidationMessage{
       code: :no_token,
       field: :refresh_token,
-      key: :refresh_token,
       message: "Token was somehow missed",
     }}
   end

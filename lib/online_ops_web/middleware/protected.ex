@@ -1,23 +1,22 @@
 defmodule OnlineOpsWeb.Middleware.Protected do
   @behaviour Absinthe.Middleware
   alias Kronky.ValidationMessage
-
+  require Logger
   def call(resolution, _config) do
     case resolution.context do
       %{current_user: _} ->
         resolution
       _ ->
         resolution
-        |> Absinthe.Resolution.put_result({:error, unauthenticated()})
+        |> Absinthe.Resolution.put_result({:ok, unauthenticated()})
     end
   end
 
   defp unauthenticated() do
-    {:ok, %ValidationMessage{
+    %ValidationMessage{
       code: :unauthorized,
       field: :bearer,
-      key: :bearer,
       message: "Invalid authorization token",
-    }}
+    }
   end
 end

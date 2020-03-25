@@ -3,6 +3,7 @@ defmodule OnlineOps.Schemas.Space do
   import Ecto.Changeset
 
   alias OnlineOps.Schemas.SpaceUser
+  alias OnlineOps.Schemas.SpaceAuth
   alias OnlineOps.Schemas.GaData
 
   @type t :: %__MODULE__{}
@@ -11,13 +12,11 @@ defmodule OnlineOps.Schemas.Space do
 
   schema "spaces" do
     field :state, :string
-    field :property, :string
-    field :view, :string
-    field :refresh_token, :string
     field :name, :string
 
     has_many :space_users, SpaceUser
     has_many :ga_data, GaData
+    has_one :space_auth, SpaceAuth
 
     timestamps()
   end
@@ -25,12 +24,12 @@ defmodule OnlineOps.Schemas.Space do
   @doc false
   def create_changeset(space, attrs) do
     space
-    |> cast(attrs, [:state, :property, :view, :refresh_token, :name])
+    |> cast(attrs, [:state, :name])
     |> validate_required([:state])
   end
 
   def update_changeset(space, attrs) do
     space
-    |> cast(attrs, [:state, :property, :view, :refresh_token, :name])
+    |> cast(attrs, [:state, :name])
   end
 end

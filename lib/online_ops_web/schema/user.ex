@@ -4,8 +4,6 @@ defmodule OnlineOpsWeb.Schema.User do
   use Absinthe.Schema.Notation
   alias OnlineOpsWeb.Middleware.{Protected, CaptureRefresh}
   import Kronky.Payload
-  import_types Kronky.ValidationMessageTypes
-  import_types OnlineOpsWeb.Schema.Scalars
 
   alias OnlineOpsWeb.Resolvers.User, as: UserResolver
 

@@ -1,6 +1,9 @@
 defmodule OnlineOpsWeb.Schema do
   use Absinthe.Schema
 
+
+  import_types Kronky.ValidationMessageTypes
+  import_types OnlineOpsWeb.Schema.Scalars
   import_types OnlineOpsWeb.Schema.User
   import_types OnlineOpsWeb.Schema.Space
 
