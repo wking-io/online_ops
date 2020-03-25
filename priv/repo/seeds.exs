@@ -9,3 +9,11 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias OnlineOps.Users
+
+Users.create_user(%{
+  email: "contact@test.io",
+  first_name: "Will",
+  last_name: "King"
+})
