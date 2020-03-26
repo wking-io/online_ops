@@ -10,14 +10,13 @@ defmodule OnlineOpsWeb.Router do
     plug :put_absinthe_context
   end
 
-  # pipeline :anonymous_browser do
-  #   plug :accepts, ["html"]
-  #   plug :fetch_session
-  #   plug :fetch_flash
-  #   plug :protect_from_forgery
-  #   plug :put_secure_browser_headers
-  #   plug :maybe_auth
-  # end
+  pipeline :anonymous_browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
 
   # pipeline :ensure_auth do
   #   plug Guardian.Plug.EnsureAuthenticated, claims: %{"typ" => "access"}
@@ -62,7 +61,12 @@ defmodule OnlineOpsWeb.Router do
   #   get "/", PageController, :index
   # end
 
-  scope "/api" do
+  scope "/" do
+    pipe_through :api
+    forward "/graphql", Absinthe.Plug, schema: OnlineOpsWeb.Schema
+  end
+
+  scope "/" do
     pipe_through :api
 
     forward "/graphiql", Absinthe.Plug.GraphiQL,
@@ -77,12 +81,12 @@ defmodule OnlineOpsWeb.Router do
   #   get "/:provider/callback", AuthController, :callback
   # end
 
-  # scope "/", OnlineOpsWeb do
-  #   pipe_through :authenticated_browser
+  scope "/", OnlineOpsWeb do
+    pipe_through :anonymous_browser
 
-  #   # Important: this must be the last route defined
-  #   get "/*path", MainController, :index
-  # end
+    # Important: this must be the last route defined
+    get "/*path", MainController, :index
+  end
 
   if Mix.env == :dev do
     # If using Phoenix

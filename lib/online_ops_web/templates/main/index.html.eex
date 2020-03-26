@@ -1,0 +1,3 @@
+<div class="font-sans font-antialised flex items-center justify-center h-screen w-full bg-gradient">
+  <h1 class="text-3xl text-white font-bold">Loading...</h1>
+</div>

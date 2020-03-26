@@ -16,7 +16,7 @@
     <%= if assigns[:page_title] do %>
     <title><%= @page_title %></title>
     <% else %>
-    <title>Relevant analyitcs for growing your business | OnlineOps</title>
+    <title>Relevant analytics for growing your business | OnlineOps</title>
     <% end %>
 
     <%= if assigns[:og] do %>
@@ -38,11 +38,10 @@
     <meta name="theme-color" content="#ffffff">
   </head>
   
-  <body class="font-sans text-black">
-    <%= render OnlineOpsWeb.PageView, "header.html" %>
+  <body id="elm" class="font-sans text-black">
     <main role="main" class="container">
       <%= render @view_module, @view_template, assigns %>
     </main>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/#{asset_from_module(@view_module)}.js") %>"></script>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
