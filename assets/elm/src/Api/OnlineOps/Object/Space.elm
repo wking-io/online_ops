@@ -2,8 +2,14 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Object.Space exposing (..)
+module Api.OnlineOps.Object.Space exposing (..)
 
+import Api.OnlineOps.InputObject
+import Api.OnlineOps.Interface
+import Api.OnlineOps.Object
+import Api.OnlineOps.Scalar
+import Api.OnlineOps.ScalarCodecs
+import Api.OnlineOps.Union
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -11,29 +17,23 @@ import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import OnlineOps.InputObject
-import OnlineOps.Interface
-import OnlineOps.Object
-import OnlineOps.Scalar
-import OnlineOps.ScalarCodecs
-import OnlineOps.Union
 
 
-id : SelectionSet OnlineOps.ScalarCodecs.Id OnlineOps.Object.Space
+id : SelectionSet Api.OnlineOps.ScalarCodecs.Id Api.OnlineOps.Object.Space
 id =
-    Object.selectionForField "ScalarCodecs.Id" "id" [] (OnlineOps.ScalarCodecs.codecs |> OnlineOps.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "ScalarCodecs.Id" "id" [] (Api.OnlineOps.ScalarCodecs.codecs |> Api.OnlineOps.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-insertedAt : SelectionSet OnlineOps.ScalarCodecs.Timestamp OnlineOps.Object.Space
+insertedAt : SelectionSet Api.OnlineOps.ScalarCodecs.Timestamp Api.OnlineOps.Object.Space
 insertedAt =
-    Object.selectionForField "ScalarCodecs.Timestamp" "insertedAt" [] (OnlineOps.ScalarCodecs.codecs |> OnlineOps.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+    Object.selectionForField "ScalarCodecs.Timestamp" "insertedAt" [] (Api.OnlineOps.ScalarCodecs.codecs |> Api.OnlineOps.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
 
 
-name : SelectionSet (Maybe String) OnlineOps.Object.Space
+name : SelectionSet (Maybe String) Api.OnlineOps.Object.Space
 name =
     Object.selectionForField "(Maybe String)" "name" [] (Decode.string |> Decode.nullable)
 
 
-updatedAt : SelectionSet OnlineOps.ScalarCodecs.Timestamp OnlineOps.Object.Space
+updatedAt : SelectionSet Api.OnlineOps.ScalarCodecs.Timestamp Api.OnlineOps.Object.Space
 updatedAt =
-    Object.selectionForField "ScalarCodecs.Timestamp" "updatedAt" [] (OnlineOps.ScalarCodecs.codecs |> OnlineOps.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+    Object.selectionForField "ScalarCodecs.Timestamp" "updatedAt" [] (Api.OnlineOps.ScalarCodecs.codecs |> Api.OnlineOps.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)

@@ -2,8 +2,14 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Object.UserProfile exposing (..)
+module Api.OnlineOps.Object.UserProfile exposing (..)
 
+import Api.OnlineOps.InputObject
+import Api.OnlineOps.Interface
+import Api.OnlineOps.Object
+import Api.OnlineOps.Scalar
+import Api.OnlineOps.ScalarCodecs
+import Api.OnlineOps.Union
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -11,24 +17,18 @@ import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import OnlineOps.InputObject
-import OnlineOps.Interface
-import OnlineOps.Object
-import OnlineOps.Scalar
-import OnlineOps.ScalarCodecs
-import OnlineOps.Union
 
 
-email : SelectionSet String OnlineOps.Object.UserProfile
+email : SelectionSet String Api.OnlineOps.Object.UserProfile
 email =
     Object.selectionForField "String" "email" [] Decode.string
 
 
-firstName : SelectionSet String OnlineOps.Object.UserProfile
+firstName : SelectionSet String Api.OnlineOps.Object.UserProfile
 firstName =
     Object.selectionForField "String" "firstName" [] Decode.string
 
 
-lastName : SelectionSet String OnlineOps.Object.UserProfile
+lastName : SelectionSet String Api.OnlineOps.Object.UserProfile
 lastName =
     Object.selectionForField "String" "lastName" [] Decode.string

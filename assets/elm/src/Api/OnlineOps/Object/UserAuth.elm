@@ -2,8 +2,14 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Object.UserAuth exposing (..)
+module Api.OnlineOps.Object.UserAuth exposing (..)
 
+import Api.OnlineOps.InputObject
+import Api.OnlineOps.Interface
+import Api.OnlineOps.Object
+import Api.OnlineOps.Scalar
+import Api.OnlineOps.ScalarCodecs
+import Api.OnlineOps.Union
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -11,19 +17,13 @@ import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import OnlineOps.InputObject
-import OnlineOps.Interface
-import OnlineOps.Object
-import OnlineOps.Scalar
-import OnlineOps.ScalarCodecs
-import OnlineOps.Union
 
 
-accessToken : SelectionSet String OnlineOps.Object.UserAuth
+accessToken : SelectionSet String Api.OnlineOps.Object.UserAuth
 accessToken =
     Object.selectionForField "String" "accessToken" [] Decode.string
 
 
-user : SelectionSet decodesTo OnlineOps.Object.UserProfile -> SelectionSet decodesTo OnlineOps.Object.UserAuth
+user : SelectionSet decodesTo Api.OnlineOps.Object.UserProfile -> SelectionSet decodesTo Api.OnlineOps.Object.UserAuth
 user object_ =
     Object.selectionForCompositeField "user" [] object_ identity

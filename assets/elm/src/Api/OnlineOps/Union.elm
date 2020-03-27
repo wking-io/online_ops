@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Union exposing (..)
+module Api.OnlineOps.Union exposing (..)
 
 
 type StepData

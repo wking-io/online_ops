@@ -2,20 +2,20 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.InputObject exposing (..)
+module Api.OnlineOps.InputObject exposing (..)
 
+import Api.OnlineOps.Enum.SetupStep
+import Api.OnlineOps.Interface
+import Api.OnlineOps.Object
+import Api.OnlineOps.Scalar
+import Api.OnlineOps.ScalarCodecs
+import Api.OnlineOps.Union
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import OnlineOps.Enum.SetupStep
-import OnlineOps.Interface
-import OnlineOps.Object
-import OnlineOps.Scalar
-import OnlineOps.ScalarCodecs
-import OnlineOps.Union
 
 
 buildCreateSessionParams : CreateSessionParamsRequiredFields -> CreateSessionParams
@@ -104,7 +104,7 @@ buildSpaceSetupParams required fillOptionals =
 
 
 type alias SpaceSetupParamsRequiredFields =
-    { step : OnlineOps.Enum.SetupStep.SetupStep }
+    { step : Api.OnlineOps.Enum.SetupStep.SetupStep }
 
 
 type alias SpaceSetupParamsOptionalFields =
@@ -115,7 +115,7 @@ type alias SpaceSetupParamsOptionalFields =
 -}
 type alias SpaceSetupParams =
     { selection : OptionalArgument String
-    , step : OnlineOps.Enum.SetupStep.SetupStep
+    , step : Api.OnlineOps.Enum.SetupStep.SetupStep
     }
 
 
@@ -124,4 +124,4 @@ type alias SpaceSetupParams =
 encodeSpaceSetupParams : SpaceSetupParams -> Value
 encodeSpaceSetupParams input =
     Encode.maybeObject
-        [ ( "selection", Encode.string |> Encode.optional input.selection ), ( "step", Encode.enum OnlineOps.Enum.SetupStep.toString input.step |> Just ) ]
+        [ ( "selection", Encode.string |> Encode.optional input.selection ), ( "step", Encode.enum Api.OnlineOps.Enum.SetupStep.toString input.step |> Just ) ]

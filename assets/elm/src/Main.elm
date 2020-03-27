@@ -19,10 +19,10 @@ type Model
     | Home Home.Model
 
 
-init : Maybe Viewer -> Url -> Nav.Key -> ( Model, Cmd Msg )
-init maybeViewer url navKey =
+init : Url -> Nav.Key -> ( Model, Cmd Msg )
+init url navKey =
     changeRouteTo (Route.fromUrl url)
-        (Redirect (Session.fromViewer navKey maybeViewer))
+        (Redirect (Session.fromViewer navKey))
 
 
 
@@ -152,7 +152,7 @@ subscriptions model =
 
 main : Program Value Model Msg
 main =
-    Api.application Viewer.decoder
+    Browser.application
         { init = init
         , onUrlChange = ChangedUrl
         , onUrlRequest = ClickedLink

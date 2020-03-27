@@ -2,8 +2,14 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Object.SetupOption exposing (..)
+module Api.OnlineOps.Object.SetupOption exposing (..)
 
+import Api.OnlineOps.InputObject
+import Api.OnlineOps.Interface
+import Api.OnlineOps.Object
+import Api.OnlineOps.Scalar
+import Api.OnlineOps.ScalarCodecs
+import Api.OnlineOps.Union
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -11,19 +17,13 @@ import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import OnlineOps.InputObject
-import OnlineOps.Interface
-import OnlineOps.Object
-import OnlineOps.Scalar
-import OnlineOps.ScalarCodecs
-import OnlineOps.Union
 
 
-id : SelectionSet OnlineOps.ScalarCodecs.Id OnlineOps.Object.SetupOption
+id : SelectionSet Api.OnlineOps.ScalarCodecs.Id Api.OnlineOps.Object.SetupOption
 id =
-    Object.selectionForField "ScalarCodecs.Id" "id" [] (OnlineOps.ScalarCodecs.codecs |> OnlineOps.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "ScalarCodecs.Id" "id" [] (Api.OnlineOps.ScalarCodecs.codecs |> Api.OnlineOps.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-name : SelectionSet String OnlineOps.Object.SetupOption
+name : SelectionSet String Api.OnlineOps.Object.SetupOption
 name =
     Object.selectionForField "String" "name" [] Decode.string

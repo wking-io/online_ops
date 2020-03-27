@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.VerifyScalarCodecs exposing (..)
+module Api.OnlineOps.VerifyScalarCodecs exposing (..)
 
 
 placeholder : String

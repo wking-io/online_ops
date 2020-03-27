@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Object exposing (..)
+module Api.OnlineOps.Object exposing (..)
 
 
 type ConnectAccount

@@ -2,8 +2,14 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Mutation exposing (..)
+module Api.OnlineOps.Mutation exposing (..)
 
+import Api.OnlineOps.InputObject
+import Api.OnlineOps.Interface
+import Api.OnlineOps.Object
+import Api.OnlineOps.Scalar
+import Api.OnlineOps.ScalarCodecs
+import Api.OnlineOps.Union
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -11,91 +17,85 @@ import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
-import OnlineOps.InputObject
-import OnlineOps.Interface
-import OnlineOps.Object
-import OnlineOps.Scalar
-import OnlineOps.ScalarCodecs
-import OnlineOps.Union
 
 
 type alias AuthorizeUserOptionalArguments =
-    { input : OptionalArgument OnlineOps.InputObject.MagicTokenParams }
+    { input : OptionalArgument Api.OnlineOps.InputObject.MagicTokenParams }
 
 
-authorizeUser : (AuthorizeUserOptionalArguments -> AuthorizeUserOptionalArguments) -> SelectionSet decodesTo OnlineOps.Object.UserAuthPayload -> SelectionSet (Maybe decodesTo) RootMutation
+authorizeUser : (AuthorizeUserOptionalArguments -> AuthorizeUserOptionalArguments) -> SelectionSet decodesTo Api.OnlineOps.Object.UserAuthPayload -> SelectionSet (Maybe decodesTo) RootMutation
 authorizeUser fillInOptionals object_ =
     let
         filledInOptionals =
             fillInOptionals { input = Absent }
 
         optionalArgs =
-            [ Argument.optional "input" filledInOptionals.input OnlineOps.InputObject.encodeMagicTokenParams ]
+            [ Argument.optional "input" filledInOptionals.input Api.OnlineOps.InputObject.encodeMagicTokenParams ]
                 |> List.filterMap identity
     in
     Object.selectionForCompositeField "authorizeUser" optionalArgs object_ (identity >> Decode.nullable)
 
 
 type alias CompleteSetupStepOptionalArguments =
-    { input : OptionalArgument OnlineOps.InputObject.SpaceSetupParams }
+    { input : OptionalArgument Api.OnlineOps.InputObject.SpaceSetupParams }
 
 
 type alias CompleteSetupStepRequiredArguments =
-    { id : OnlineOps.ScalarCodecs.Id }
+    { id : Api.OnlineOps.ScalarCodecs.Id }
 
 
-completeSetupStep : (CompleteSetupStepOptionalArguments -> CompleteSetupStepOptionalArguments) -> CompleteSetupStepRequiredArguments -> SelectionSet decodesTo OnlineOps.Object.StepPayload -> SelectionSet (Maybe decodesTo) RootMutation
+completeSetupStep : (CompleteSetupStepOptionalArguments -> CompleteSetupStepOptionalArguments) -> CompleteSetupStepRequiredArguments -> SelectionSet decodesTo Api.OnlineOps.Object.StepPayload -> SelectionSet (Maybe decodesTo) RootMutation
 completeSetupStep fillInOptionals requiredArgs object_ =
     let
         filledInOptionals =
             fillInOptionals { input = Absent }
 
         optionalArgs =
-            [ Argument.optional "input" filledInOptionals.input OnlineOps.InputObject.encodeSpaceSetupParams ]
+            [ Argument.optional "input" filledInOptionals.input Api.OnlineOps.InputObject.encodeSpaceSetupParams ]
                 |> List.filterMap identity
     in
-    Object.selectionForCompositeField "completeSetupStep" (optionalArgs ++ [ Argument.required "id" requiredArgs.id (OnlineOps.ScalarCodecs.codecs |> OnlineOps.Scalar.unwrapEncoder .codecId) ]) object_ (identity >> Decode.nullable)
+    Object.selectionForCompositeField "completeSetupStep" (optionalArgs ++ [ Argument.required "id" requiredArgs.id (Api.OnlineOps.ScalarCodecs.codecs |> Api.OnlineOps.Scalar.unwrapEncoder .codecId) ]) object_ (identity >> Decode.nullable)
 
 
 type alias CreateSessionOptionalArguments =
-    { input : OptionalArgument OnlineOps.InputObject.CreateSessionParams }
+    { input : OptionalArgument Api.OnlineOps.InputObject.CreateSessionParams }
 
 
-createSession : (CreateSessionOptionalArguments -> CreateSessionOptionalArguments) -> SelectionSet decodesTo OnlineOps.Object.UserPayload -> SelectionSet (Maybe decodesTo) RootMutation
+createSession : (CreateSessionOptionalArguments -> CreateSessionOptionalArguments) -> SelectionSet decodesTo Api.OnlineOps.Object.UserPayload -> SelectionSet (Maybe decodesTo) RootMutation
 createSession fillInOptionals object_ =
     let
         filledInOptionals =
             fillInOptionals { input = Absent }
 
         optionalArgs =
-            [ Argument.optional "input" filledInOptionals.input OnlineOps.InputObject.encodeCreateSessionParams ]
+            [ Argument.optional "input" filledInOptionals.input Api.OnlineOps.InputObject.encodeCreateSessionParams ]
                 |> List.filterMap identity
     in
     Object.selectionForCompositeField "createSession" optionalArgs object_ (identity >> Decode.nullable)
 
 
-createSpace : SelectionSet decodesTo OnlineOps.Object.SpacePayload -> SelectionSet (Maybe decodesTo) RootMutation
+createSpace : SelectionSet decodesTo Api.OnlineOps.Object.SpacePayload -> SelectionSet (Maybe decodesTo) RootMutation
 createSpace object_ =
     Object.selectionForCompositeField "createSpace" [] object_ (identity >> Decode.nullable)
 
 
 type alias CreateUserOptionalArguments =
-    { input : OptionalArgument OnlineOps.InputObject.CreateUserParams }
+    { input : OptionalArgument Api.OnlineOps.InputObject.CreateUserParams }
 
 
-createUser : (CreateUserOptionalArguments -> CreateUserOptionalArguments) -> SelectionSet decodesTo OnlineOps.Object.UserPayload -> SelectionSet (Maybe decodesTo) RootMutation
+createUser : (CreateUserOptionalArguments -> CreateUserOptionalArguments) -> SelectionSet decodesTo Api.OnlineOps.Object.UserPayload -> SelectionSet (Maybe decodesTo) RootMutation
 createUser fillInOptionals object_ =
     let
         filledInOptionals =
             fillInOptionals { input = Absent }
 
         optionalArgs =
-            [ Argument.optional "input" filledInOptionals.input OnlineOps.InputObject.encodeCreateUserParams ]
+            [ Argument.optional "input" filledInOptionals.input Api.OnlineOps.InputObject.encodeCreateUserParams ]
                 |> List.filterMap identity
     in
     Object.selectionForCompositeField "createUser" optionalArgs object_ (identity >> Decode.nullable)
 
 
-refreshSession : SelectionSet decodesTo OnlineOps.Object.UserAuthPayload -> SelectionSet (Maybe decodesTo) RootMutation
+refreshSession : SelectionSet decodesTo Api.OnlineOps.Object.UserAuthPayload -> SelectionSet (Maybe decodesTo) RootMutation
 refreshSession object_ =
     Object.selectionForCompositeField "refreshSession" [] object_ (identity >> Decode.nullable)

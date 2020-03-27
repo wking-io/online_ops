@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Enum.SetupStep exposing (..)
+module Api.OnlineOps.Enum.SetupStep exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 

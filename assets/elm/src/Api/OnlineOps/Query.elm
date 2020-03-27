@@ -2,8 +2,14 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Query exposing (..)
+module Api.OnlineOps.Query exposing (..)
 
+import Api.OnlineOps.InputObject
+import Api.OnlineOps.Interface
+import Api.OnlineOps.Object
+import Api.OnlineOps.Scalar
+import Api.OnlineOps.ScalarCodecs
+import Api.OnlineOps.Union
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -11,28 +17,22 @@ import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
-import OnlineOps.InputObject
-import OnlineOps.Interface
-import OnlineOps.Object
-import OnlineOps.Scalar
-import OnlineOps.ScalarCodecs
-import OnlineOps.Union
 
 
 type alias SpaceRequiredArguments =
-    { id : OnlineOps.ScalarCodecs.Id }
+    { id : Api.OnlineOps.ScalarCodecs.Id }
 
 
-space : SpaceRequiredArguments -> SelectionSet decodesTo OnlineOps.Object.SpacePayload -> SelectionSet (Maybe decodesTo) RootQuery
+space : SpaceRequiredArguments -> SelectionSet decodesTo Api.OnlineOps.Object.SpacePayload -> SelectionSet (Maybe decodesTo) RootQuery
 space requiredArgs object_ =
-    Object.selectionForCompositeField "space" [ Argument.required "id" requiredArgs.id (OnlineOps.ScalarCodecs.codecs |> OnlineOps.Scalar.unwrapEncoder .codecId) ] object_ (identity >> Decode.nullable)
+    Object.selectionForCompositeField "space" [ Argument.required "id" requiredArgs.id (Api.OnlineOps.ScalarCodecs.codecs |> Api.OnlineOps.Scalar.unwrapEncoder .codecId) ] object_ (identity >> Decode.nullable)
 
 
-spaces : SelectionSet decodesTo OnlineOps.Object.SpacePayload -> SelectionSet (Maybe (List (Maybe decodesTo))) RootQuery
+spaces : SelectionSet decodesTo Api.OnlineOps.Object.SpacePayload -> SelectionSet (Maybe (List (Maybe decodesTo))) RootQuery
 spaces object_ =
     Object.selectionForCompositeField "spaces" [] object_ (identity >> Decode.nullable >> Decode.list >> Decode.nullable)
 
 
-viewer : SelectionSet decodesTo OnlineOps.Object.UserPayload -> SelectionSet (Maybe decodesTo) RootQuery
+viewer : SelectionSet decodesTo Api.OnlineOps.Object.UserPayload -> SelectionSet (Maybe decodesTo) RootQuery
 viewer object_ =
     Object.selectionForCompositeField "viewer" [] object_ (identity >> Decode.nullable)

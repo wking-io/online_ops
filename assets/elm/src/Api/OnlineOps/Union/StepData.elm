@@ -2,8 +2,14 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.Union.StepData exposing (..)
+module Api.OnlineOps.Union.StepData exposing (..)
 
+import Api.OnlineOps.InputObject
+import Api.OnlineOps.Interface
+import Api.OnlineOps.Object
+import Api.OnlineOps.Scalar
+import Api.OnlineOps.ScalarCodecs
+import Api.OnlineOps.Union
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -11,18 +17,12 @@ import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (FragmentSelectionSet(..), SelectionSet(..))
 import Json.Decode as Decode
-import OnlineOps.InputObject
-import OnlineOps.Interface
-import OnlineOps.Object
-import OnlineOps.Scalar
-import OnlineOps.ScalarCodecs
-import OnlineOps.Union
 
 
 type alias Fragments decodesTo =
-    { onConnectAccount : SelectionSet decodesTo OnlineOps.Object.ConnectAccount
-    , onConnectProperty : SelectionSet decodesTo OnlineOps.Object.ConnectProperty
-    , onConnectView : SelectionSet decodesTo OnlineOps.Object.ConnectView
+    { onConnectAccount : SelectionSet decodesTo Api.OnlineOps.Object.ConnectAccount
+    , onConnectProperty : SelectionSet decodesTo Api.OnlineOps.Object.ConnectProperty
+    , onConnectView : SelectionSet decodesTo Api.OnlineOps.Object.ConnectView
     }
 
 
@@ -30,7 +30,7 @@ type alias Fragments decodesTo =
 -}
 fragments :
     Fragments decodesTo
-    -> SelectionSet decodesTo OnlineOps.Union.StepData
+    -> SelectionSet decodesTo Api.OnlineOps.Union.StepData
 fragments selections =
     Object.exhaustiveFragmentSelection
         [ Object.buildFragment "ConnectAccount" selections.onConnectAccount

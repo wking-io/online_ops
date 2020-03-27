@@ -6,16 +6,59 @@ It exposes an opaque Endpoint type which is guaranteed to point to the correct U
 
 -}
 
+import Api.OnlineOps.Object exposing (UserPayload, ValidationMessage)
+import Api.OnlineOps.Object.UserPayload as UserPayload
+import Api.OnlineOps.Object.ValidationMessage as ValidationMessage
 import Browser
 import Browser.Navigation as Nav
 import Graphql.Http
 import Graphql.Operation exposing (RootQuery)
-import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
+import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import Http exposing (Body, Expect)
 import Json.Decode as Decode exposing (Decoder, Value, decodeString, field, string)
 import Json.Decode.Pipeline as Pipeline exposing (optional, required)
 import Json.Encode as Encode
 import Url exposing (Url)
+
+
+type alias RawError =
+    { code : String
+    , field : Maybe String
+    , message : Maybe String
+    }
+
+
+type alias ErrorDetails =
+    { field : String
+    , message : String
+    }
+
+
+type ErrorMessage
+    = NotFound
+    | TokenError
+    | ExpiredToken
+    | Unauthorized ErrorDetails
+    | InvalidInput ErrorDetails
+
+
+type ErrorMessages
+    = None
+    | Errors (List ErrorMessage)
+
+
+type Response a
+    = Response
+        { successful : Bool
+        , result : a
+        , messages : Maybe (List ErrorMessage)
+        }
+
+
+type alias Profile =
+    { firstName : String
+    , lastName : String
+    }
 
 
 endpoint : String
@@ -36,6 +79,37 @@ makeQuery auth query decodesTo =
         |> Graphql.Http.send decodesTo
 
 
+userPayload : SelectionSet (Response Profile) UserPayload
+userPayload =
+    SelectionSet.map3 Response
+        (UserPayload.messages (SelectionSet.list messageSelection))
+        UserPayload.result
+        UserPayload.successful
+
+
+messageSelection : SelectionSet ErrorMessage ValidationMessage
+messageSelection =
+    SelectionSet.map3 RawError
+        ValidationMessage.code
+        ValidationMessage.field
+        ValidationMessage.message
+        |> SelectionSet.map processError
+
+
+processError : RawError -> ErrorMessage
+processError _ =
+    NotFound
+
+
+getResult : Response a -> Result ErrorMessages a
+getResult (Response { successful, result, messages }) =
+    if successful then
+        Ok result
+
+    else
+        Err messages
+
+
 
 -- CRED
 
@@ -53,40 +127,3 @@ This includes:
 -}
 type Auth
     = Auth String
-
-
-
--- SERIALIZATION
--- APPLICATION
-
-
-application :
-    Decoder (Auth -> viewer)
-    ->
-        { init : Maybe viewer -> Url -> Nav.Key -> ( model, Cmd msg )
-        , onUrlChange : Url -> msg
-        , onUrlRequest : Browser.UrlRequest -> msg
-        , subscriptions : model -> Sub msg
-        , update : msg -> model -> ( model, Cmd msg )
-        , view : model -> Browser.Document msg
-        }
-    -> Program Value model msg
-application viewerDecoder config =
-    let
-        init flags url navKey =
-            let
-                maybeViewer =
-                    Decode.decodeValue Decode.string flags
-                        |> Result.andThen (Decode.decodeString (storageDecoder viewerDecoder))
-                        |> Result.toMaybe
-            in
-            config.init maybeViewer url navKey
-    in
-    Browser.application
-        { init = init
-        , onUrlChange = config.onUrlChange
-        , onUrlRequest = config.onUrlRequest
-        , subscriptions = config.subscriptions
-        , update = config.update
-        , view = config.view
-        }

@@ -2,23 +2,23 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module OnlineOps.ScalarCodecs exposing (..)
+module Api.OnlineOps.ScalarCodecs exposing (..)
 
+import Api.OnlineOps.Scalar exposing (defaultCodecs)
 import Json.Decode as Decode exposing (Decoder)
-import OnlineOps.Scalar exposing (defaultCodecs)
 
 
 type alias Id =
-    OnlineOps.Scalar.Id
+    Api.OnlineOps.Scalar.Id
 
 
 type alias Timestamp =
-    OnlineOps.Scalar.Timestamp
+    Api.OnlineOps.Scalar.Timestamp
 
 
-codecs : OnlineOps.Scalar.Codecs Id Timestamp
+codecs : Api.OnlineOps.Scalar.Codecs Id Timestamp
 codecs =
-    OnlineOps.Scalar.defineCodecs
+    Api.OnlineOps.Scalar.defineCodecs
         { codecId = defaultCodecs.codecId
         , codecTimestamp = defaultCodecs.codecTimestamp
         }
